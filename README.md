@@ -86,6 +86,24 @@ uvx iowarp-mcps slurm
 
 <img src="https://www.nsf.gov/themes/custom/nsf_theme/components/molecules/logo/logo-desktop.png" alt="NSF Logo" width="24" height="24"> **[NSF (National Science Foundation)](https://www.nsf.gov/)** - Supporting scientific computing research and AI integration initiatives
 
+## Development & Publishing
+
+### Testing Development Versions
+
+Development versions are automatically published to TestPyPI on every commit to main:
+
+```bash
+# Install latest dev version from TestPyPI
+uvx --index-url https://test.pypi.org/simple/ iowarp-mcps
+```
+
+### Creating Releases
+
+```bash
+git tag v1.2.3
+git push origin v1.2.3
+```
+
 ## Contributing
 
 We welcome contributions in any form!
