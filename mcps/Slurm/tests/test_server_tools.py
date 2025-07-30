@@ -699,7 +699,7 @@ def test_server_tool_inspection():
 
     # Test that the tool has expected attributes
     # FastMCP tools should have name, description, etc.
-    if hasattr(tool, "name"):
+    if hasattr(tool, "__name__"):
         assert tool.name is not None
 
     # At minimum, verify all tools exist
@@ -1012,7 +1012,7 @@ def test_server_tool_error_paths():
         assert tool is not None
 
         # Test that the tool has expected FastMCP attributes
-        if hasattr(tool, "name"):
+        if hasattr(tool, "__name__"):
             assert isinstance(tool.name, str)
         if hasattr(tool, "description"):
             assert isinstance(tool.description, str)

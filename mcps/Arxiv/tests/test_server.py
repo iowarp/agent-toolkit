@@ -983,13 +983,13 @@ if __name__ == "__main__":
             tasks = []
             if hasattr(server, "search_arxiv_tool"):
                 tool = server.search_arxiv_tool
-                tasks.append(tool.fn("cs.AI", 5))
+                tasks.append(tool("cs.AI", 5))
             if hasattr(server, "get_recent_papers_tool"):
                 tool = server.get_recent_papers_tool
-                tasks.append(tool.fn("cs.LG", 3))
+                tasks.append(tool("cs.LG", 3))
             if hasattr(server, "search_papers_by_author_tool"):
                 tool = server.search_papers_by_author_tool
-                tasks.append(tool.fn("Test Author", 5))
+                tasks.append(tool("Test Author", 5))
 
             # Execute concurrently
             if tasks:

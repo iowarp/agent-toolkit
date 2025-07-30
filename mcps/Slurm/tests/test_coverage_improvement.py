@@ -1451,7 +1451,7 @@ def test_server_comprehensive_tool_coverage():
         tool = getattr(server, tool_name)
         assert tool is not None
         # Each tool should have a name attribute
-        if hasattr(tool, "name"):
+        if hasattr(tool, "__name__"):
             assert isinstance(tool.name, str)
 
 
