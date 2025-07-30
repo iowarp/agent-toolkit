@@ -7,7 +7,7 @@
 import os
 import sys
 import json
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 from typing import Optional
 import mcp_handlers
