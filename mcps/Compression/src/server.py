@@ -7,7 +7,7 @@ Provides file compression capabilities through MCP tools.
 import os
 import sys
 import json
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 import logging
 import mcp_handlers

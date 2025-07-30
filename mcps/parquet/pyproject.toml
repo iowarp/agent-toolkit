@@ -17,7 +17,10 @@ dependencies = [
   "uvicorn[standard]>=0.20",
   "pandas>=1.0",
   "pyarrow>=19.0.1",
-  "fastmcp"
+  "fastmcp",
+  "h11>=0.16.0",  # Override vulnerable version from fastmcp
+  "mcp>=1.10.0",  # Override vulnerable version from fastmcp
+  "starlette>=0.47.2"  # Override vulnerable version from fastmcp
 ]
 
 [project.scripts]

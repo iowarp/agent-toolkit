@@ -12,7 +12,7 @@ authors = [
 keywords = ["pandas", "data-analysis", "statistical-analysis", "data-science", "data-manipulation", "time-series", "data-cleaning", "data-transformation", "mcp", "llm-integration"]
 
 dependencies = [
-  "fastmcp",
+  "mcp[cli]>=1.10.0",
   "python-dotenv>=1.0.0",
   "pandas>=2.2.0",
   "numpy<2",
@@ -36,6 +36,7 @@ build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
+    "pip-audit>=2.9.0",
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
     "ruff>=0.12.5",

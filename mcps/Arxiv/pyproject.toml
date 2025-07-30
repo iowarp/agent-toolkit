@@ -12,8 +12,9 @@ authors = [
 keywords = ["data processing", "arxiv", "publications", "scientific data", "research", "papers"]
 
 dependencies = [
-    "fastmcp",
+    "mcp[cli]>=1.10.0",
     "httpx>=0.24.0",
+    "python-dotenv>=1.0.0",  # Used in server.py: from dotenv import load_dotenv
 ]
 
 [dependency-groups]

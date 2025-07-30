@@ -26,7 +26,7 @@ keywords = [ "distributed logging",
     ]
 
 dependencies = [
-    "fastmcp",
+    "mcp[cli]>=1.10.0",
     "python-dotenv",
     "google-genai",
     "h5py"
@@ -41,5 +41,6 @@ build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
+    "pip-audit>=2.9.0",
     "ruff>=0.12.5",
 ]

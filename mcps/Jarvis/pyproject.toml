@@ -10,8 +10,9 @@ authors = [
 ]
 
 dependencies = [
-  "fastmcp",
+  "mcp[cli]>=1.10.0",
   "fastapi",
+  "starlette>=0.47.2",  # Override vulnerable version
   "python-dotenv>=1.0.0",
   "jarvis-util @ git+https://github.com/grc-iit/jarvis-util.git@main#egg=jarvis-util",
   "jarvis-cd @ git+https://github.com/grc-iit/jarvis-cd.git@main#egg=jarvis-cd"
@@ -29,6 +30,7 @@ dev-dependencies = [
     "psutil>=6.0.0",
     "mypy>=1.17.0",
     "types-requests",
+    "pip-audit>=2.9.0",
 ]
 
 [project.scripts]

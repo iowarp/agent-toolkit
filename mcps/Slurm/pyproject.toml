@@ -12,9 +12,9 @@ authors = [
 keywords = ["MCP", "Slurm", "HPC", "job-management", "cluster-monitoring", "workload-management", "scientific-computing", "high-performance-computing"]
 
 dependencies = [
-    "fastmcp",
+    "mcp[cli]>=1.10.0",
     "psutil>=7.0.0",
-    "python-dotenv>=1.0.0",
+    "python-dotenv>=1.0.0",  # Used in server.py: from dotenv import load_dotenv
 ]
 
 [dependency-groups]

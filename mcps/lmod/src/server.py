@@ -6,7 +6,7 @@ Provides tools to search, load, unload, and inspect modules using the Lmod syste
 
 import os
 import sys
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from typing import Optional
 from dotenv import load_dotenv
 import logging

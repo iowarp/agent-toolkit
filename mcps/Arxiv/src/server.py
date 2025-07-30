@@ -7,7 +7,7 @@ Provides access to ArXiv research papers through search and retrieval tools.
 import os
 import sys
 import json
-from fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP
 from dotenv import load_dotenv
 import logging
 from typing import Optional

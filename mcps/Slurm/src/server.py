@@ -17,9 +17,9 @@ from typing import Optional
 
 # Try to import required dependencies with fallbacks
 try:
-    from fastmcp import FastMCP
+    from mcp.server.fastmcp import FastMCP
 except ImportError:
-    print("FastMCP not available. Please install with: uv add fastmcp", file=sys.stderr)
+    print("MCP not available. Please install with: uv add 'mcp[cli]'", file=sys.stderr)
     sys.exit(1)
 
 try:

@@ -13,13 +13,18 @@ keywords = ["compression", "gzip", "storage", "archival", "backup", "analytics",
 
 
 dependencies = [
-    "fastmcp>=0.1.0",
-    "python-dotenv>=1.0.0",
+    "mcp[cli]>=1.10.0",
+    "python-dotenv>=1.0.0",  # Used in server.py: from dotenv import load_dotenv
+    "h11>=0.16.0",  # Override vulnerable version
+    "starlette>=0.47.2",  # Override vulnerable version  
+    "requests>=2.32.4",  # Override vulnerable version
+    "urllib3>=2.5.0",  # Override vulnerable version
 ]
 
 [dependency-groups]
 dev = [
      "mypy>=1.17.0",
+     "pip-audit>=2.9.0",
      "pytest>=8.3.5",
      "pytest-asyncio>=1.0.0",
      "pytest-cov>=6.2.1",

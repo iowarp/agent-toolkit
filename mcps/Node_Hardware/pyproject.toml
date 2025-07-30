@@ -10,8 +10,8 @@ authors = [
 ]
 
 dependencies = [
-  "fastmcp",
-  "python-dotenv>=1.0.0",
+  "mcp[cli]>=1.10.0",
+  "python-dotenv>=1.0.0",  # Used in server.py: from dotenv import load_dotenv
   "psutil>=5.9.0"
 ]
 
