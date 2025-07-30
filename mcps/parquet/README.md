@@ -155,6 +155,9 @@ uv --directory=$env:CLONE_DIR\iowarp-mcps\mcps\parquet run parquet-mcp --help
 
 
 
+
+
+
 ## Examples
 
 ### 1. Data Discovery and Schema Analysis
