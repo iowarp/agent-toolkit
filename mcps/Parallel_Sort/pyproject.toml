@@ -15,7 +15,8 @@ dependencies = [
   "fastmcp",
   "python-dotenv>=1.0.0",
   "pandas>=1.5.0",
-  "aiofiles>=23.0.0"
+  "aiofiles>=23.0.0",
+  "starlette>=0.47.2"
 ]
 
 [dependency-groups]

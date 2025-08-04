@@ -22,7 +22,10 @@ keywords = [
 dependencies = [
     "fastmcp",
     "numpy",
-    "adios2"
+    "adios2",
+    "h11>=0.16.0",
+    "mcp>=1.10.0",
+    "starlette>=0.47.2"
 ]
 
 [dependency-groups]

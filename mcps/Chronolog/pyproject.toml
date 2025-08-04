@@ -29,7 +29,11 @@ dependencies = [
     "fastmcp",
     "python-dotenv",
     "google-genai",
-    "h5py"
+    "h5py",
+    "h11>=0.16.0",
+    "requests>=2.32.4",
+    "starlette>=0.47.2",
+    "urllib3>=2.5.0"
 ]
 
 [project.scripts]
