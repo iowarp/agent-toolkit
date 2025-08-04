@@ -433,8 +433,10 @@ class TestServer:
             assert hasattr(server, tool_name)
             tool = getattr(server, tool_name)
             assert tool is not None
+            # Check that the tool has the expected FunctionTool attributes
             assert hasattr(tool, "name")
             assert hasattr(tool, "fn")
+            assert callable(tool.fn)
 
     def test_logger_configuration(self):
         """Test logger configuration"""
