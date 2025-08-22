@@ -1,585 +1,521 @@
-# National Data Platform (NDP) MCP Server
+# NDP MCP - National Data Platform Integration for LLMs
 
-A Model Context Protocol (MCP) server that provides access to the National Data Platform API, enabling discovery, search, and analysis of datasets including EarthScope Consortium data and other geospatial datasets.
+## Description
 
-## 🚀 Quick Start
+NDP MCP is a Model Context Protocol server that enables LLMs to access and analyze data from the National Data Platform, featuring comprehensive dataset discovery, geospatial analysis, multi-format data downloading (CSV, GeoJSON, PNG, etc.), and advanced visualization capabilities including multi-panel time series plots for EarthScope Consortium data and other scientific datasets.
 
-```bash
-# Install dependencies
-pip install -r requirements.txt
+## 🛠️ Installation
 
-# Run the server
-python ndp_mcp_server.py
+### Requirements
 
-# Run tests
-python test/run_tests.py
+- Python 3.10 or higher
+- [uv](https://docs.astral.sh/uv/) package manager (recommended)
 
-# Run EarthScope workflow
-python earthscope_workflow.py
+<details>
+<summary><b>Install in Cursor</b></summary>
+
+Go to: `Settings` -> `Cursor Settings` -> `MCP` -> `Add new global MCP server`
+
+Pasting the following configuration into your Cursor `~/.cursor/mcp.json` file is the recommended approach. You may also install in a specific project by creating `.cursor/mcp.json` in your project folder. See [Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol) for more info.
+
+```json
+{
+  "mcpServers": {
+    "ndp": {
+      "command": "uvx",
+      "args": ["iowarp-mcps", "ndp"]
+    }
+  }
+}
 ```
 
-## ✨ Features
+</details>
 
-- **Resource Discovery**: List and access NDP organizations and datasets
-- **Dataset Search**: Search across the NDP catalog with intelligent chunking
-- **Data Download**: Download dataset resources (CSV, GeoJSON, PNG, etc.)
-- **Geospatial Analysis**: Analyze EarthScope and other geospatial datasets
-- **Prompt Templates**: Pre-built workflows for common NDP tasks
-- **Rate Limiting**: Built-in API rate limiting and error handling
-- **STDIO Communication**: Full MCP stdio protocol support
-- **UVX Compatibility**: Ready for uvx installation and distribution
-- **Configurable IP**: No hardcoded IP addresses
+<details>
+<summary><b>Install in VS Code</b></summary>
 
-## 📦 Installation
+Add this to your VS Code MCP config file. See [VS Code MCP docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more info.
 
-### Prerequisites
-
-- Python 3.8 or higher
-- pip package manager
-
-### Setup
-
-1. Clone or download this repository
-2. Navigate to the `ndp` directory
-3. Install dependencies:
-
-```bash
-pip install -r requirements.txt
+```json
+"mcp": {
+  "servers": {
+    "ndp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["iowarp-mcps", "ndp"]
+    }
+  }
+}
 ```
 
-### UV Installation
+</details>
 
-```bash
-# Install uv if not already installed
-curl -LsSf https://astral.sh/uv/install.sh | sh
-export PATH="$HOME/.local/bin:$PATH"
+<details>
+<summary><b>Install in Claude Code</b></summary>
 
-# Run MCP server with uv
-uv run python ndp_mcp_server.py --help
+Run this command. See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp) for more info.
 
-# Run MCP server with custom configuration
-uv run python ndp_mcp_server.py --base-url "http://your-ndp-server:8003" --server "your-server"
-
-# Run EarthScope workflow with uv
-uv run python earthscope_workflow.py
-
-# Run EarthScope workflow with custom IP
-uv run python earthscope_workflow.py --base-url "http://155.101.6.191:8003"
+```sh
+claude mcp add ndp -- uvx iowarp-mcps ndp
 ```
+
+</details>
+
+<details>
+<summary><b>Install in Claude Desktop</b></summary>
+
+Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) for more info.
+
+```json
+{
+  "mcpServers": {
+    "ndp": {
+      "command": "uvx",
+      "args": ["iowarp-mcps", "ndp"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary><b>Manual Setup</b></summary>
+
+**Linux/macOS:**
+```bash
+CLONE_DIR=$(pwd)
+git clone https://github.com/iowarp/iowarp-mcps.git
+uv --directory=$CLONE_DIR/iowarp-mcps/mcps/NDP run ndp-mcp-server --help
+```
+
+**Windows CMD:**
+```cmd
+set CLONE_DIR=%cd%
+git clone https://github.com/iowarp/iowarp-mcps.git
+uv --directory=%CLONE_DIR%\iowarp-mcps\mcps\NDP run ndp-mcp-server --help
+```
+
+**Windows PowerShell:**
+```powershell
+$env:CLONE_DIR=$PWD
+git clone https://github.com/iowarp/iowarp-mcps.git
+uv --directory=$env:CLONE_DIR\iowarp-mcps\mcps\NDP run ndp-mcp-server --help
+```
+
+</details>
+
+## Capabilities
+
+### `list_organizations`
+**Description**: List all available organizations from the National Data Platform API.
+
+**Parameters**: None
+
+**Returns**: Dictionary containing: - result: Formatted list of organizations with details - organizations: Raw organization data from API - status: Success/error status
+
+### `search_datasets`
+**Description**: Search for datasets across the NDP catalog with intelligent chunking for large result sets.
+
+**Parameters**:
+- `query` (str): Search query string
+- `organization` (str, optional): Organization filter
+- `limit` (int, optional): Maximum number of results (default: 10)
+
+**Returns**: Dictionary containing: - result: Formatted search results with dataset details - results: Raw dataset data from API - chunk_id: Current chunk identifier (if chunking applied) - total_chunks: Total number of chunks available
+
+### `get_dataset_details`
+**Description**: Retrieve complete metadata for a specific dataset including resources, tags, and spatial information.
+
+**Parameters**:
+- `dataset_id` (str): Dataset ID to retrieve
+
+**Returns**: Dictionary containing: - result: Formatted dataset details with comprehensive metadata - dataset: Raw dataset information from API - status: Success/error status
+
+### `download_dataset_resources`
+**Description**: Download dataset files from dataset resources with support for multiple file formats.
+
+**Parameters**:
+- `dataset_id` (str): Dataset ID to download resources from
+- `resource_types` (List[str], optional): Array of resource types to download (defaults to all)
+
+**Returns**: Dictionary containing: - result: Download summary with file details - downloaded_files: List of downloaded file information - status: Success/error status
+
+### `download_file_from_url`
+**Description**: Download a file directly from a URL and save it to a specified location with comprehensive error handling.
+
+**Parameters**:
+- `url` (str): The URL to download the file from
+- `output_path` (str): The local path where the file should be saved
+
+**Returns**: Dictionary containing: - result: Download summary with file details - file_path: Path where file was saved - file_size: Size of downloaded file in bytes - url: Original download URL
+
+### `analyze_geospatial_data`
+**Description**: Analyze geospatial data from a dataset with comprehensive insights and recommendations.
+
+**Parameters**:
+- `dataset_id` (str): Dataset ID to analyze
+
+**Returns**: Dictionary containing: - result: Geospatial analysis summary - geospatial_resources: List of geospatial resources found - status: Success/error status
+
+### `create_multi_series_plot`
+**Description**: Create a multi-series line plot with multiple y-columns against a single x-column, perfect for time series data like GNSS measurements.
+
+**Parameters**:
+- `file_path` (str): Path to CSV file
+- `x_column` (str): Column name for x-axis data
+- `y_columns` (List[str]): List of column names for y-axis data
+- `title` (str, optional): Plot title (default: "Multi-Series Line Plot")
+- `output_path` (str, optional): Output image file path (default: "multi_series_plot.png")
+- `figure_size` (str, optional): Figure size in "widthxheight" format (default: "15x12")
+- `dpi` (int, optional): Image quality (default: 300)
+
+**Returns**: Dictionary containing: - result: Plot creation summary - output_path: Path where plot was saved - figure_size: Actual figure dimensions - dpi: Image quality setting - series: List of plotted series - data_points: Number of data points processed - statistics: Statistical summary for each series
+
+### `create_multi_panel_plot`
+**Description**: Create a multi-panel plot with separate subplots for each y-column, perfect for GNSS time series with East, North, Up components.
+
+**Parameters**:
+- `file_path` (str): Path to CSV file
+- `x_column` (str): Column name for x-axis data
+- `y_columns` (List[str]): List of column names for y-axis data
+- `title` (str, optional): Plot title (default: "Multi-Panel Time Series Plot")
+- `output_path` (str, optional): Output image file path (default: "multi_panel_plot.png")
+- `figure_size` (str, optional): Figure size in "widthxheight" format (default: "15x12")
+- `dpi` (int, optional): Image quality (default: 300)
+- `layout` (str, optional): Layout type - "vertical" or "horizontal" (default: "vertical")
+
+**Returns**: Dictionary containing: - result: Plot creation summary - output_path: Path where plot was saved - figure_size: Actual figure dimensions - dpi: Image quality setting - panels: List of panel names - layout: Layout type used - data_points: Number of data points processed - statistics: Statistical summary for each panel
+
+## Examples
+
+### 1. Dataset Discovery and Search
+```
+I need to find EarthScope Consortium datasets related to GNSS measurements and seismic data.
+```
+
+**Tools called:**
+- `list_organizations` - Get available organizations including EarthScope Consortium
+- `search_datasets` - Search for GNSS and seismic datasets with intelligent chunking
+- `get_dataset_details` - Retrieve comprehensive metadata for specific datasets
+
+### 2. Data Download and File Management
+```
+Download the RHCL.CI.LY_.20 GNSS dataset files including the CSV data and GeoJSON metadata.
+```
+
+**Tools called:**
+- `get_dataset_details` - Get dataset information and resource URLs
+- `download_file_from_url` - Download CSV file directly from URL
+- `download_file_from_url` - Download GeoJSON metadata file
+- `download_dataset_resources` - Alternative method to download all resources
+
+### 3. Geospatial Analysis and Visualization
+```
+Analyze the geospatial properties of the downloaded dataset and create a 3-panel time series plot showing East, North, and Up components.
+```
+
+**Tools called:**
+- `analyze_geospatial_data` - Analyze spatial properties and provide insights
+- `create_multi_panel_plot` - Create 3-panel visualization with separate subplots
+- `create_multi_series_plot` - Alternative single-plot visualization with all components
+
+### 4. Complete EarthScope Workflow
+```
+Execute a complete EarthScope GNSS data analysis workflow: download data, analyze statistics, and generate professional visualizations.
+```
+
+**Tools called:**
+- `search_datasets` - Find EarthScope GNSS datasets
+- `download_file_from_url` - Download CSV and GeoJSON files
+- `create_multi_panel_plot` - Generate 3-panel time series visualization
+- `analyze_geospatial_data` - Provide comprehensive analysis insights
+
+### 5. Multi-Format Data Processing
+```
+Download and process various data formats from NDP including CSV time series, GeoJSON spatial data, and PNG visualizations.
+```
+
+**Tools called:**
+- `download_dataset_resources` - Download multiple file formats
+- `create_multi_series_plot` - Create time series visualizations
+- `analyze_geospatial_data` - Process spatial metadata
+- `get_dataset_details` - Access comprehensive dataset information
+
+### 6. Advanced Visualization and Analysis
+```
+Create professional scientific visualizations with custom styling, multiple panels, and comprehensive statistical analysis.
+```
+
+**Tools called:**
+- `create_multi_panel_plot` - Generate publication-quality multi-panel plots
+- `create_multi_series_plot` - Create single-plot visualizations with multiple series
+- `analyze_geospatial_data` - Provide spatial analysis and recommendations
+- `get_dataset_details` - Access metadata for visualization context
+
+## 🌍 EarthScope Integration
+
+The NDP MCP server provides specialized support for EarthScope Consortium data:
+
+### GNSS Time Series Analysis
+- **Multi-panel plots** for East, North, Up components
+- **Automatic time conversion** from nanoseconds to datetime
+- **Professional styling** with scientific standards
+- **Statistical analysis** with comprehensive metrics
+
+### Geospatial Data Processing
+- **GeoJSON metadata** analysis and visualization
+- **Spatial coordinate systems** and projections
+- **Bounding box calculations** and spatial extent analysis
+- **Attribute data** integration with spatial features
+
+### Data Quality Assessment
+- **Missing data detection** and reporting
+- **Statistical validation** of time series data
+- **Spatial data integrity** checks
+- **Format compatibility** verification
 
 ## 🔧 Configuration
-
-### Command Line Arguments
-
-```bash
-python ndp_mcp_server.py [OPTIONS]
-
-Options:
-  --base-url TEXT        NDP API base URL (default: http://155.101.6.191:8003)
-  --server TEXT          NDP server parameter (default: global)
-  --chunk-threshold INT  Chunk threshold for large results (default: 100)
-  --help                 Show this message and exit
-```
 
 ### Environment Variables
 
 ```bash
-export NDP_BASE_URL="http://your-ndp-server:8003"
-export NDP_DEFAULT_SERVER="your-server"
-export NDP_CHUNK_THRESHOLD="100"
+# NDP API Configuration
+export NDP_BASE_URL="https://api.datacollaboratory.org"
+export NDP_DEFAULT_SERVER="global"
+export NDP_CHUNK_THRESHOLD="50"
+
+# MCP Transport Configuration
+export MCP_TRANSPORT="stdio"  # or "sse"
+export MCP_SSE_HOST="0.0.0.0"
+export MCP_SSE_PORT="8000"
 ```
 
-## 🔗 MCP Client Integration
-
-### Claude Desktop Configuration
+### Custom API Endpoints
 
 ```json
 {
   "mcpServers": {
     "ndp": {
-      "command": "uv",
-      "args": ["run", "python", "ndp_mcp_server.py", "--base-url", "http://155.101.6.191:8003"],
+      "command": "uvx",
+      "args": ["iowarp-mcps", "ndp"],
       "env": {
-        "NDP_DEFAULT_SERVER": "global"
+        "NDP_BASE_URL": "http://your-custom-ndp-server:8003",
+        "NDP_DEFAULT_SERVER": "your-server-name"
       }
     }
   }
 }
 ```
 
-### Cursor Configuration
-
-```json
-{
-  "mcpServers": {
-    "ndp": {
-      "command": "uv",
-      "args": ["run", "python", "ndp_mcp_server.py"],
-      "env": {
-        "NDP_BASE_URL": "http://155.101.6.191:8003",
-        "NDP_DEFAULT_SERVER": "global"
-      }
-    }
-  }
-}
-```
-
-### Direct Python Usage
-
-```json
-{
-  "mcpServers": {
-    "ndp": {
-      "command": "python",
-      "args": ["ndp_mcp_server.py", "--base-url", "http://155.101.6.191:8003"],
-      "env": {}
-    }
-  }
-}
-```
-
-## 🛠️ Available Tools
-
-### 1. list_organizations
-
-Lists all available organizations from the NDP API.
-
-**Parameters**: None
-
-**Example**:
-```python
-# List all organizations
-result = await client.call_tool("list_organizations", {})
-```
-
-### 2. search_datasets
-
-Searches for datasets across the NDP catalog with intelligent chunking.
-
-**Parameters**:
-- `query` (string, required): Search query string
-- `organization` (string, optional): Organization filter
-- `limit` (integer, optional): Maximum number of results (default: 10)
-
-**Example**:
-```python
-# Search for EarthScope datasets
-result = await client.call_tool("search_datasets", {
-    "query": "seismograph",
-    "organization": "earthscope_consortium",
-    "limit": 20
-})
-```
-
-### 3. get_dataset_details
-
-Retrieves complete metadata for a specific dataset.
-
-**Parameters**:
-- `dataset_id` (string, required): Dataset ID to retrieve
-
-**Example**:
-```python
-# Get details for a specific dataset
-result = await client.call_tool("get_dataset_details", {
-    "dataset_id": "fd1f52cd-6bed-46c8-a853-045b79da7981"
-})
-```
-
-### 4. download_dataset_resources
-
-Downloads dataset files from dataset resources.
-
-**Parameters**:
-- `dataset_id` (string, required): Dataset ID to download resources from
-- `resource_types` (array, optional): Array of resource types to download (defaults to all)
-
-**Example**:
-```python
-# Download all resources for a dataset
-result = await client.call_tool("download_dataset_resources", {
-    "dataset_id": "fd1f52cd-6bed-46c8-a853-045b79da7981"
-})
-
-# Download only CSV and GeoJSON files
-result = await client.call_tool("download_dataset_resources", {
-    "dataset_id": "fd1f52cd-6bed-46c8-a853-045b79da7981",
-    "resource_types": ["CSV", "GeoJSON"]
-})
-```
-
-### 5. analyze_geospatial_data
-
-Analyzes geospatial datasets, specifically designed for EarthScope and similar data.
-
-**Parameters**:
-- `dataset_id` (string, required): Dataset ID to analyze
-
-**Example**:
-```python
-# Analyze a geospatial dataset
-result = await client.call_tool("analyze_geospatial_data", {
-    "dataset_id": "fd1f52cd-6bed-46c8-a853-045b79da7981"
-})
-```
-
-## 📚 Available Resources
-
-### Organizations
-
-Resources representing NDP organizations:
-- URI: `ndp://organizations/{org_id}`
-- MIME Type: `application/json`
-
-### Dataset Catalog
-
-General catalog resource:
-- URI: `ndp://catalog`
-- MIME Type: `application/json`
-
-### Individual Datasets
-
-Dataset-specific resources:
-- URI: `ndp://datasets/{dataset_id}`
-- MIME Type: `application/json`
-
-## 💬 Available Prompts
-
-### 1. Find EarthScope Data
-
-Template to help users discover EarthScope Consortium datasets.
-
-**Parameters**:
-- `search_terms` (string): Specific search terms for EarthScope data
-
-### 2. Analyze Geospatial Dataset
-
-Template to walk through downloading and analyzing a complete dataset.
-
-**Parameters**:
-- `dataset_id` (string, required): Dataset ID to analyze
-
-### 3. Dataset Discovery
-
-General purpose dataset search and exploration workflow template.
-
-**Parameters**:
-- `query` (string, required): Search query
-- `organization` (string, optional): Organization filter
-
-## 🌍 EarthScope Workflow
-
-The NDP MCP server includes a complete EarthScope GNSS data analysis workflow:
-
-### Running the Workflow
-
-```bash
-# Using Python directly
-python earthscope_workflow.py
-
-# Using uv (recommended)
-uv run python earthscope_workflow.py
-
-# Using uv with custom IP address
-uv run python earthscope_workflow.py --base-url "http://155.101.6.191:8003"
-```
-
-### What the Workflow Does
-
-1. **Discovers RHCL.CI.LY_.20 dataset** from EarthScope Consortium
-2. **Downloads data files**:
-   - `RHCL.CI.LY_.20.csv` (48.9 MB, 816,588 GNSS records)
-   - `rhcl.geojson` (811 bytes, spatial metadata)
-3. **Processes data with Pandas**:
-   - Loads 816,588 GNSS positioning measurements
-   - Performs statistical analysis
-   - Handles time series data
-4. **Analyzes geospatial data**:
-   - Processes GeoJSON metadata
-   - Extracts spatial information
-5. **Generates visualizations**:
-   - Creates `RHCL.CI.LY_.20.png` time series plots
-   - Matches reference visualization quality
-6. **Creates documentation**:
-   - Generates comprehensive dataset summary
-   - Provides analysis insights
-
-### Output Files
-
-```
-earthscope_output/
-├── RHCL.CI.LY_.20.csv (48.9 MB) - Raw GNSS data
-├── rhcl.geojson (811 bytes) - Spatial metadata  
-├── RHCL.CI.LY_.20.png (343 KB) - Time series visualization
-└── dataset_summary.md (2 KB) - Complete analysis report
-```
-
-## 🧪 Testing
-
-### Running Tests
-
-```bash
-# Run all tests
-python test/run_tests.py
-
-# Run individual test suites
-python test/test_server.py      # Server functionality tests
-python test/test_stdio.py       # STDIO communication tests
-```
-
-### Test Coverage
-
-#### Server Functionality Tests
-- ✅ Server initialization
-- ✅ NDP client creation
-- ✅ Tool definitions (5 tools)
-- ✅ Resource definitions
-- ✅ Prompt definitions (3 prompts)
-- ✅ Tool execution
-- ✅ File handling
-- ✅ Error handling
-- ✅ Caching mechanism
-- ✅ Configuration validation
-
-#### STDIO Communication Tests
-- ✅ Command line argument parsing
-- ✅ Server startup with custom parameters
-- ✅ Initialize request/response
-- ✅ Tools list request/response
-- ✅ Resources list request/response
-- ✅ Tool call request/response
-- ✅ JSON-RPC protocol compliance
-
-### Expected Test Results
-
-```
-Total Tests: 2
-Passed: 2
-Failed: 0
-Success Rate: 100.0%
-🎉 ALL TESTS PASSED!
-```
-
-## 📡 STDIO Communication
-
-The server communicates via standard input/output streams:
-
-- **Input**: JSON-RPC requests from MCP client
-- **Output**: JSON-RPC responses to MCP client
-- **Error**: Logging and error messages to stderr
-
-### STDIO Protocol
-
-1. **Initialization**: Client sends `initialize` request
-2. **Capabilities**: Server responds with available tools/resources
-3. **Tool Calls**: Client calls tools via `tools/call` requests
-4. **Resource Access**: Client lists and reads resources
-5. **Prompt Templates**: Client accesses prompt templates
-
-### JSON-RPC Format
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "tools/call",
-  "params": {
-    "name": "list_organizations",
-    "arguments": {}
-  }
-}
-```
-
-## 🔄 Example Workflows
-
-### Discovering EarthScope Data
-
-1. **List Organizations**: Find the EarthScope Consortium organization
-2. **Search Datasets**: Search for specific EarthScope datasets
-3. **Get Details**: Retrieve detailed metadata for interesting datasets
-4. **Download Resources**: Download CSV, GeoJSON, and other data files
-5. **Analyze Data**: Perform geospatial analysis and generate insights
-
-### Complete Dataset Analysis
-
-1. **Dataset Details**: Get comprehensive metadata
-2. **Resource Download**: Download all available data files
-3. **Data Parsing**: Parse CSV and GeoJSON files
-4. **Statistical Analysis**: Generate summary statistics
-5. **Spatial Analysis**: Analyze geographic features and relationships
-6. **Insights Generation**: Provide recommendations for further analysis
-
-## ⚙️ Configuration
-
-### API Settings
-
-The server is configured to use the NDP API at:
-- Base URL: `http://155.101.6.191:8003` (configurable)
-- Default Server: `global` (configurable)
-
-### Rate Limiting
-
-The server implements rate limiting to respect API constraints:
-- 10 requests per second
-- Automatic retry logic for failed requests
-- Graceful error handling
-
-### Caching
-
-Search results are cached to improve performance:
-- Intelligent chunking for large result sets
-- Configurable chunk threshold (default: 100 results)
-- Automatic cache management
+## 📊 Visualization Features
+
+### Multi-Panel Plots
+- **Vertical layout** for time series data
+- **Horizontal layout** for comparative analysis
+- **Automatic subplot creation** for each data series
+- **Professional styling** with scientific standards
+
+### Time Series Support
+- **Nanosecond precision** time conversion
+- **Automatic datetime formatting** for x-axis
+- **Multiple time formats** support
+- **Temporal analysis** capabilities
+
+### Customization Options
+- **Figure size** control (width x height)
+- **DPI settings** for high-quality output
+- **Color schemes** optimized for scientific data
+- **Grid lines** and axis formatting
 
 ## 🛡️ Error Handling
 
 The server includes comprehensive error handling:
 
-- **API Failures**: Graceful handling of network and API errors
-- **Invalid Inputs**: Validation of all input parameters
-- **File Downloads**: Safe handling of file download failures
-- **Data Parsing**: Error recovery for malformed data files
+- **Network failures** with automatic retry logic
+- **API rate limiting** with intelligent throttling
+- **File download errors** with detailed error messages
+- **Data validation** with format checking
+- **Memory management** for large datasets
 
-## 🔒 Security Considerations
+## 🔒 Security Features
 
-- URL validation before downloads
-- File size limits for downloads
-- Input sanitization
-- Safe handling of potentially malicious content
-
-## 🔗 Integration Examples
-
-### With Pandas MCP
-
-```python
-# Download dataset resources
-download_result = await ndp_client.call_tool("download_dataset_resources", {
-    "dataset_id": "dataset_id_here"
-})
-
-# Use pandas to analyze the downloaded CSV
-import pandas as pd
-df = pd.read_csv("downloaded_file.csv")
-analysis = df.describe()
-```
-
-### With Visualization Tools
-
-```python
-# Analyze geospatial data
-analysis_result = await ndp_client.call_tool("analyze_geospatial_data", {
-    "dataset_id": "dataset_id_here"
-})
-
-# Use the analysis results to create visualizations
-# (Integration with matplotlib, plotly, or other visualization libraries)
-```
+- **URL validation** before downloads
+- **File size limits** for downloads
+- **Input sanitization** for all parameters
+- **Safe file handling** with proper permissions
+- **Error message filtering** for sensitive information
 
 ## 📁 Project Structure
 
 ```
-ndp/
-├── __init__.py                 # Package initialization
-├── ndp_mcp_server.py          # Main MCP server implementation
-├── pyproject.toml             # UVX packaging configuration
-├── requirements.txt           # Dependencies
-├── earthscope_workflow.py     # Complete workflow example
-├── README.md                  # This comprehensive documentation
-└── test/                      # Test directory
-    ├── README.md              # Test documentation
-    ├── run_tests.py           # Test runner script
-    ├── test_server.py         # Server functionality tests
-    └── test_stdio.py          # STDIO communication tests
+iowarp-mcps/mcps/NDP/
+├── src/
+│   ├── __init__.py                 # Package initialization
+│   └── ndp_mcp_server.py          # Main MCP server implementation
+├── test/
+│   ├── earthscope_workflow.py     # Complete workflow example
+│   ├── earthscope_gemini_prompt.md # Gemini CLI prompt template
+│   └── requirements.txt           # Test dependencies
+├── evaluation/
+│   ├── time_series_plot.png       # Example visualization output
+│   └── time_over_east_north_up_plot.png # Multi-panel example
+├── pyproject.toml                 # UVX packaging configuration
+├── requirements.txt               # Dependencies
+└── README.md                      # This documentation
 ```
 
-## 🔧 Development
+## 🚀 Quick Start Examples
 
-### Adding New Tools
-
-To add new tools to the server:
-
-1. Define the tool in the `list_tools()` method
-2. Implement the tool logic in the `call_tool()` method
-3. Add appropriate error handling and validation
-
-### Extending Resources
-
-To add new resource types:
-
-1. Update the `list_resources()` method
-2. Implement resource reading in `read_resource()`
-3. Add appropriate MIME type handling
-
-### Customizing Prompts
-
-To modify or add prompt templates:
-
-1. Update the prompts dictionary in `get_prompt()`
-2. Add new prompt definitions to `list_prompts()`
-3. Ensure proper parameter validation
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-1. **Connection Errors**: Check network connectivity to the NDP API
-2. **Rate Limiting**: The server automatically handles rate limiting
-3. **File Download Failures**: Check file URLs and network connectivity
-4. **Data Parsing Errors**: Some datasets may have malformed data
-5. **STDIO Issues**: Verify MCP client configuration
-
-### Logging
-
-The server provides detailed logging:
-- API request/response logging
-- Error tracking and debugging
-- Performance monitoring
-
-Enable debug logging by setting the log level:
-
+### Basic Dataset Search
 ```python
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# Search for EarthScope datasets
+result = await client.call_tool("search_datasets", {
+    "query": "GNSS",
+    "organization": "earthscope_consortium",
+    "limit": 10
+})
 ```
 
-### Testing STDIO Communication
+### Download and Visualize
+```python
+# Download GNSS data
+download_result = await client.call_tool("download_file_from_url", {
+    "url": "https://ds2.datacollaboratory.org/Earthscope_api/RHCL.CI.LY_.20.csv",
+    "output_path": "earthscope_output/RHCL.CI.LY_.20.csv"
+})
 
-```bash
-# Test stdio communication manually
-echo '{"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2024-11-05", "capabilities": {}, "clientInfo": {"name": "test", "version": "1.0.0"}}}' | python ndp_mcp_server.py
+# Create 3-panel visualization
+plot_result = await client.call_tool("create_multi_panel_plot", {
+    "file_path": "earthscope_output/RHCL.CI.LY_.20.csv",
+    "x_column": "time",
+    "y_columns": ["east", "north", "up"],
+    "title": "RHCL.CI.LY_.20 - GNSS Time Series",
+    "output_path": "earthscope_output/RHCL.CI.LY_.20.png",
+    "figure_size": "15x12",
+    "dpi": 300,
+    "layout": "vertical"
+})
 ```
 
-## 📄 License
+### Complete Workflow
+```python
+# 1. Find datasets
+datasets = await client.call_tool("search_datasets", {"query": "EarthScope GNSS"})
 
-This project is provided as-is for educational and research purposes.
+# 2. Get details
+details = await client.call_tool("get_dataset_details", {"dataset_id": "dataset_id"})
 
-## 🆘 Support
+# 3. Download data
+download = await client.call_tool("download_file_from_url", {"url": "data_url", "output_path": "data.csv"})
 
-For issues and questions:
-1. Check the troubleshooting section
-2. Review the error logs
-3. Verify API connectivity
-4. Ensure all dependencies are installed correctly
-5. Run the test suite to verify functionality
+# 4. Analyze geospatial data
+analysis = await client.call_tool("analyze_geospatial_data", {"dataset_id": "dataset_id"})
 
-## 🤝 Contributing
+# 5. Create visualization
+visualization = await client.call_tool("create_multi_panel_plot", {
+    "file_path": "data.csv",
+    "x_column": "time",
+    "y_columns": ["east", "north", "up"],
+    "title": "GNSS Time Series Analysis",
+    "output_path": "visualization.png"
+})
+```
 
-Contributions are welcome! Please:
-1. Follow the existing code style
-2. Add appropriate error handling
-3. Include tests for new features
-4. Update documentation as needed
+## 🤝 Integration with Other MCP Servers
+
+### Pandas MCP Integration
+```python
+# Download data with NDP MCP
+ndp_result = await ndp_client.call_tool("download_file_from_url", {
+    "url": "data_url",
+    "output_path": "data.csv"
+})
+
+# Analyze with Pandas MCP
+pandas_result = await pandas_client.call_tool("statistical_summary", {
+    "file_path": "data.csv",
+    "columns": ["east", "north", "up"]
+})
+```
+
+### Plot MCP Integration
+```python
+# Download data with NDP MCP
+ndp_result = await ndp_client.call_tool("download_file_from_url", {
+    "url": "data_url",
+    "output_path": "data.csv"
+})
+
+# Create basic plot with Plot MCP
+plot_result = await plot_client.call_tool("line_plot", {
+    "file_path": "data.csv",
+    "x_column": "time",
+    "y_column": "east",
+    "title": "East Component",
+    "output_path": "east_plot.png"
+})
+```
+
+## 📈 Performance Optimization
+
+### Large Dataset Handling
+- **Intelligent chunking** for search results
+- **Streaming downloads** for large files
+- **Memory-efficient processing** for visualization
+- **Background processing** for long-running operations
+
+### Caching Strategy
+- **Search result caching** with configurable thresholds
+- **API response caching** to reduce redundant requests
+- **File download caching** for frequently accessed data
+- **Visualization caching** for repeated plot generation
+
+## 🔄 Advanced Workflows
+
+### Automated Data Pipeline
+1. **Dataset Discovery** - Find relevant datasets
+2. **Data Download** - Retrieve files automatically
+3. **Quality Assessment** - Validate data integrity
+4. **Visualization Generation** - Create publication-ready plots
+5. **Analysis Reporting** - Generate comprehensive reports
+
+### Multi-Dataset Analysis
+1. **Batch Search** - Find multiple related datasets
+2. **Parallel Download** - Download multiple files simultaneously
+3. **Comparative Analysis** - Analyze relationships between datasets
+4. **Unified Visualization** - Create combined visualizations
+5. **Cross-Dataset Insights** - Generate comparative reports
+
+## 📚 Additional Resources
+
+### Documentation
+- [National Data Platform API Documentation](https://api.datacollaboratory.org/docs)
+- [EarthScope Consortium Data](https://www.earthscope.org/data)
+- [GNSS Data Analysis Guide](https://www.earthscope.org/gnss)
+
+### Related Tools
+- [Pandas MCP](https://github.com/iowarp/iowarp-mcps/tree/main/mcps/Pandas) - Data analysis and manipulation
+- [Plot MCP](https://github.com/iowarp/iowarp-mcps/tree/main/mcps/Plot) - Basic plotting capabilities
+- [Jarvis MCP](https://github.com/iowarp/iowarp-mcps/tree/main/mcps/Jarvis) - System management and automation
+
+### Community
+- [GitHub Issues](https://github.com/iowarp/iowarp-mcps/issues) - Report bugs and request features
+- [Discussions](https://github.com/iowarp/iowarp-mcps/discussions) - Community support and ideas
+- [Contributing Guide](https://github.com/iowarp/iowarp-mcps/blob/main/CONTRIBUTING.md) - How to contribute
 
 ## ✅ Status
 
 **NDP MCP Server Status:**
-- ✅ **STDIO Communication**: Full MCP stdio protocol support
-- ✅ **Configurable IP**: No hardcoded IP addresses
-- ✅ **UVX Compatibility**: Ready for uvx distribution
-- ✅ **EarthScope Workflow**: Complete data analysis pipeline
-- ✅ **Testing**: 100% test success rate
-- ✅ **Documentation**: Comprehensive guides provided
-- ✅ **Production Ready**: Robust error handling and security
+- ✅ **MCP Protocol**: Full MCP stdio protocol support
+- ✅ **Dataset Discovery**: Comprehensive search and metadata access
+- ✅ **Data Download**: Multi-format file downloading capabilities
+- ✅ **Geospatial Analysis**: Advanced spatial data processing
+- ✅ **Visualization**: Multi-panel and multi-series plotting
+- ✅ **EarthScope Integration**: Specialized GNSS data support
+- ✅ **Error Handling**: Robust error handling and recovery
+- ✅ **Documentation**: Comprehensive guides and examples
+- ✅ **Production Ready**: Security and performance optimized
 
-**All requirements achieved and fully functional!** 🎯
+**All capabilities implemented and fully functional!** 🎯
 

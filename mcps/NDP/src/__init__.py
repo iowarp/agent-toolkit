@@ -8,6 +8,6 @@ __version__ = "1.0.0"
 __author__ = "NDP MCP Team"
 __email__ = "ndp-mcp@example.com"
 
-from .ndp_mcp_server import NDPMCPServer, NDPClient
+from .ndp_mcp_server import NDPClient, main
 
-__all__ = ["NDPMCPServer", "NDPClient"]
+__all__ = ["NDPClient", "main"]
