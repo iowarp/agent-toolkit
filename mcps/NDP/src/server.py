@@ -8,10 +8,31 @@ import httpx
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 from pydantic import BaseModel, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Path and environment setup
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 load_dotenv()
+
+
+class NDPSettings(BaseSettings):
+    """Settings for NDP MCP Server with environment variable support."""
+
+    model_config = SettingsConfigDict(
+        env_file='.env',
+        env_file_encoding='utf-8',
+        env_prefix='NDP_',
+        extra='ignore'
+    )
+
+    server_url: str = Field(
+        default="http://155.101.6.191:8003",
+        description="Base URL for the NDP API server"
+    )
+
+
+# Load settings
+settings = NDPSettings()
 
 # Initialize FastMCP server instance
 mcp: FastMCP = FastMCP("NDPServer")
@@ -162,8 +183,8 @@ class NDPClient:
         return []
 
 
-# Initialize NDP client
-ndp_client = NDPClient()
+# Initialize NDP client with configured server URL
+ndp_client = NDPClient(base_url=settings.server_url)
 
 
 @mcp.tool(

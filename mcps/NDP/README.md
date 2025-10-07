@@ -20,6 +20,40 @@ The National Data Platform (NDP) MCP server provides comprehensive access to sea
 - [uv](https://docs.astral.sh/uv/) package manager (recommended)
 - Linux/macOS environment (Windows supported)
 
+## ⚙️ Configuration
+
+### Custom NDP Server URL
+
+By default, the NDP MCP server connects to `http://155.101.6.191:8003`. You can configure a custom NDP API server URL using environment variables:
+
+**Option 1: Environment Variable**
+```bash
+export NDP_SERVER_URL=http://your-custom-ip:port
+uvx iowarp-mcps ndp
+```
+
+**Option 2: In MCP Configuration (Cursor/VS Code/Claude Desktop)**
+```json
+{
+  "mcpServers": {
+    "ndp-mcp": {
+      "command": "uvx",
+      "args": ["iowarp-mcps", "ndp"],
+      "env": {
+        "NDP_SERVER_URL": "http://your-custom-ip:port"
+      }
+    }
+  }
+}
+```
+
+**Option 3: .env File**
+
+Create a `.env` file in the NDP MCP directory:
+```bash
+NDP_SERVER_URL=http://your-custom-ip:port
+```
+
 <details>
 <summary><b>Install in Cursor</b></summary>
 
