@@ -436,14 +436,35 @@ async def start_server():
         except Exception as e:
             logger.error(f"Error during shutdown: {e}")
 
+def main():
+    """Main entry point for HDF5 MCP server."""
+    import argparse
 
-if __name__ == "__main__":
-    # When run directly, start the server
+    parser = argparse.ArgumentParser(description="HDF5 MCP Server")
+    parser.add_argument("--data-dir", type=Path, help="Directory containing HDF5 files")
+    parser.add_argument("--log-level", choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+                        default="INFO", help="Logging level")
+    args = parser.parse_args()
+
     # Configure logging
     logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levellevel)s - %(message)s"
+        level=getattr(logging, args.log_level),
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     )
 
-    # Run the server
-    asyncio.run(start_server())
+    # Set data directory if provided
+    if args.data_dir:
+        import os
+        os.environ['HDF5_MCP_DATA_DIR'] = str(args.data_dir)
+
+    # Run server
+    try:
+        asyncio.run(run_server())
+    except KeyboardInterrupt:
+        logger.info("Server stopped by user")
+    except Exception as e:
+        logger.error(f"Server failed: {e}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
