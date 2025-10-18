@@ -320,10 +320,10 @@ class HDF5Server:
 
         # Get the distribution info for versioning
         try:
-            dist = metadata.distribution("hdf5-mcp-server")
+            dist = metadata.distribution("hdf5-mcp")
             version = dist.version
         except:
-            version = "0.1.0"
+            version = "2.0.0"
 
         async with stdio_server() as (read_stream, write_stream):
             await self.server.run(
@@ -387,10 +387,10 @@ async def run_server():
 
     # Get the distribution info for versioning
     try:
-        dist = metadata.distribution("hdf5-mcp-server")
+        dist = metadata.distribution("hdf5-mcp")
         version = dist.version
     except:
-        version = "0.1.0"
+        version = "2.0.0"
 
     # Use stdio transport for communication
     logger.info("Starting stdio server")

@@ -11,7 +11,7 @@ import h5py
 import numpy as np
 from pathlib import Path
 
-from src.hdf5_mcp_server.protocol import (
+from .protocol import (
     BatchOperation,
     BatchRequest,
     BatchResponse,
@@ -19,7 +19,7 @@ from src.hdf5_mcp_server.protocol import (
     ErrorCodes,
     ErrorSeverity
 )
-from src.hdf5_mcp_server.task_queue import TaskPriority
+from .task_queue import TaskPriority
 
 logger = logging.getLogger(__name__)
 

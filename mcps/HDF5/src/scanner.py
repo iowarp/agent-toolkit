@@ -44,7 +44,7 @@ class HDF5Scanner:
             chunk_size: Number of files to process in each chunk
             metadata_cache_size: Size of the metadata LRU cache
         """
-        self.base_dir = Path(base_dir or "/home/akougkas/dev/hdf5-mcp-server/data")
+        self.base_dir = Path(base_dir or "data")
         self.scan_lock = Lock()
         self.max_workers = max_workers
         self.chunk_size = chunk_size
