@@ -46,7 +46,7 @@ class PerformanceMonitor:
     """Monitor and track performance metrics."""
     
     def __init__(self, metrics_dir: Optional[Path] = None):
-        self.metrics_dir = metrics_dir or Path.home() / ".hdf5_mcp_server" / "metrics"
+        self.metrics_dir = metrics_dir or Path.home() / ".hdf5_mcp" / "metrics"
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
         self.metrics: Dict[str, Dict[str, Any]] = {
             "operations": {},

@@ -40,18 +40,23 @@ try:
     from .tools import get_tools
     from .resources import get_resources
     from .prompts import get_available_prompts
+    from .server import run_server
 except ImportError:
-    # Fall back to absolute imports (when run as script)
+    # Fall back to direct imports (when run as entry point script)
     import sys
     from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).parent.parent))
-    
-    from .config import get_config, set_storage_path
-    from .transports import TransportManager, StdioTransport, SSETransport
-    from .transports.base import TransportConfig, TransportType
-    from .tools import get_tools
-    from .resources import get_resources
-    from .prompts import get_available_prompts
+    # Add src directory to path
+    src_dir = Path(__file__).parent
+    if str(src_dir) not in sys.path:
+        sys.path.insert(0, str(src_dir))
+
+    from config import get_config, set_storage_path
+    from transports import TransportManager, StdioTransport, SSETransport
+    from transports.base import TransportConfig, TransportType
+    from tools import get_tools
+    from resources import get_resources
+    from prompts import get_available_prompts
+    from server import run_server
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +77,7 @@ class EnhancedHDF5Server:
                 set_storage_path(data_dir)
                 
             # Create MCP server instance
-            self.mcp_server = Server("hdf5-mcp-server")
+            self.mcp_server = Server("hdf5-mcp")
             
             # Register tools, resources, and prompts
             await self._register_handlers()
@@ -169,14 +174,8 @@ async def run_stdio_mode(data_dir: Optional[Path] = None):
     """Run server in STDIO mode (for Claude Code)."""
     if data_dir:
         set_storage_path(data_dir)
-        
-    # Import the existing server implementation
-    try:
-        from .server import run_server
-    except ImportError:
-        from .server import run_server
-    
-    # Run the existing server implementation
+
+    # Run the existing server implementation (imported at top)
     await run_server()
 
 async def run_enhanced_mode(data_dir: Optional[Path] = None):
@@ -212,26 +211,21 @@ def main():
         help="Directory containing HDF5 files"
     )
     parser.add_argument(
-        "--mode",
-        choices=["stdio", "enhanced"],
+        "--transport",
+        choices=["stdio", "sse"],
         default="stdio",
-        help="Server mode (stdio for Claude Code, enhanced for multi-transport)"
+        help="Transport type: stdio (default, for local clients) or sse (for remote/streaming)"
     )
     parser.add_argument(
         "--host",
-        default="localhost",
-        help="Host for SSE transport (enhanced mode only)"
+        default="127.0.0.1",
+        help="Host for SSE transport (default: 127.0.0.1, SSE mode only)"
     )
     parser.add_argument(
-        "--port", 
+        "--port",
         type=int,
         default=8765,
-        help="Port for SSE transport (enhanced mode only)"
-    )
-    parser.add_argument(
-        "--enable-sse",
-        action="store_true",
-        help="Enable SSE transport (enhanced mode only)"
+        help="Port for SSE transport (default: 8765, SSE mode only)"
     )
     parser.add_argument(
         "--log-level",
@@ -252,16 +246,16 @@ def main():
     if args.data_dir:
         import os
         os.environ['HDF5_MCP_DATA_DIR'] = str(args.data_dir)
-    if args.enable_sse:
+    if args.transport == "sse":
         import os
         os.environ['HDF5_MCP_ENABLE_SSE'] = 'true'
-        os.environ['HDF5_MCP_HOST'] = args.host  
+        os.environ['HDF5_MCP_HOST'] = args.host
         os.environ['HDF5_MCP_PORT'] = str(args.port)
-    
+
     try:
-        if args.mode == "stdio":
+        if args.transport == "stdio":
             asyncio.run(run_stdio_mode(args.data_dir))
-        else:
+        elif args.transport == "sse":
             asyncio.run(run_enhanced_mode(args.data_dir))
     except KeyboardInterrupt:
         logger.info("Server stopped by user")
