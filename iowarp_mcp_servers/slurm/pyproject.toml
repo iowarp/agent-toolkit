@@ -10,6 +10,7 @@ authors = [
 ]
 
 keywords = ["MCP", "Slurm", "HPC", "job-management", "cluster-monitoring", "workload-management", "scientific-computing", "high-performance-computing"]
+
 dependencies = [
     "fastmcp",
     "psutil>=7.0.0",

@@ -9,6 +9,7 @@ authors = [
     { name = "IoWarp Team - Gnosis Research Center", email = "grc@illinoistech.edu" }
 ]
 keywords = ["pandas", "data-analysis", "statistical-analysis", "data-science", "data-manipulation", "time-series", "data-cleaning", "data-transformation", "mcp", "llm-integration"]
+
 dependencies = [
   "fastmcp",
   "python-dotenv>=1.0.0",
@@ -30,14 +31,13 @@ Repository = "https://github.com/iowarp/iowarp-mcps"
 [project.scripts]
 pandas-mcp = "server:main"
 
-
-[build-system]
-requires = ["setuptools>=64.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [dependency-groups]
 dev = [
     "pytest>=8.4.1",
     "pytest-cov>=6.2.1",
     "ruff>=0.12.5",
 ]
+
+[build-system]
+requires = ["setuptools>=64.0", "wheel"]
+build-backend = "setuptools.build_meta"

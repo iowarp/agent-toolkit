@@ -20,6 +20,9 @@ dependencies = [
 Homepage = "https://iowarp.github.io/iowarp-mcps/"
 Repository = "https://github.com/iowarp/iowarp-mcps"
 
+[project.scripts]
+arxiv-mcp = "server:main"
+
 [dependency-groups]
 dev = [
      "mypy>=1.17.0",
@@ -28,9 +31,6 @@ dev = [
      "pytest-cov>=6.2.1",
      "ruff>=0.12.5",
 ]
-
-[project.scripts]
-arxiv-mcp = "server:main"
 
 [build-system]
 requires = ["setuptools>=64.0", "wheel"]
