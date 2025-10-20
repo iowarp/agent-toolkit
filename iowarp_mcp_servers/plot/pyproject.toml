@@ -5,12 +5,6 @@ description = "MCP server for advanced data visualization and plotting operation
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-
-
-[project.urls]
-Homepage = "https://iowarp.github.io/iowarp-mcps/"
-Repository = "https://github.com/iowarp/iowarp-mcps"
-
 authors = [
     { name = "IoWarp Team - Gnosis Research Center", email = "grc@illinoistech.edu" }
 ]
@@ -27,6 +21,13 @@ dependencies = [
     "openpyxl>=3.0.0"
 ]
 
+[project.urls]
+Homepage = "https://iowarp.github.io/iowarp-mcps/"
+Repository = "https://github.com/iowarp/iowarp-mcps"
+
+[project.scripts]
+plot-mcp = "server:main"
+
 [dependency-groups]
 dev = [
     "mypy>=1.17.0",
@@ -35,9 +36,6 @@ dev = [
     "pytest-cov>=6.2.1",
     "ruff>=0.12.5",
 ]
-
-[project.scripts]
-plot-mcp = "server:main"
 
 
 [build-system]

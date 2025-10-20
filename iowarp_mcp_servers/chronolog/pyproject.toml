@@ -9,10 +9,6 @@ authors = [
     { name = "IoWarp Team - Gnosis Research Center", email = "grc@illinoistech.edu" }
 ]
 
-[project.urls]
-Homepage = "https://iowarp.github.io/iowarp-mcps/"
-Repository = "https://github.com/iowarp/iowarp-mcps"
-
 keywords = [ "distributed logging",
     "chronolog",
     "event logging",
@@ -42,14 +38,18 @@ dependencies = [
     "urllib3>=2.5.0"
 ]
 
+[project.urls]
+Homepage = "https://iowarp.github.io/iowarp-mcps/"
+Repository = "https://github.com/iowarp/iowarp-mcps"
+
 [project.scripts]
 chronolog-mcp = "chronomcp.server:main"
-
-[build-system]
-requires = ["setuptools>=64.0", "wheel"]
-build-backend = "setuptools.build_meta"
 
 [dependency-groups]
 dev = [
     "ruff>=0.12.5",
 ]
+
+[build-system]
+requires = ["setuptools>=64.0", "wheel"]
+build-backend = "setuptools.build_meta"
