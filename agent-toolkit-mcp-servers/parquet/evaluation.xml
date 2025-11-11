@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluation>
+   <qa_pair>
+      <question>Using the training metadata file, how many neutrino detection events have a zenith angle less than 0.5 radians? These represent nearly vertical arrivals. Use the aggregate_column tool with filtering.</question>
+      <answer>9311680</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>What is the minimum azimuth angle (in radians) recorded among all events in batch_id 1? Use aggregate_column with appropriate filtering.</question>
+      <answer>3.9630450767347355e-06</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>Among the first 100 events in the training metadata, what is the smallest (minimum) zenith angle value? Use aggregate_column with a row range constraint.</question>
+      <answer>0.2924767344867341</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>For event_id 24 in batch_1.parquet, what is the maximum charge value (photoelectrons) recorded across all sensor pulses? First find the pulse index range from metadata, then aggregate the charge column within that range.</question>
+      <answer>3.9749999046325684</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>In the training metadata, what is the average (mean) zenith angle for all events belonging to batch_id 1? Use aggregate_column with filtering.</question>
+      <answer>1.53359019660433</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>How many sensor pulse detections in the first 10,000 rows of batch_1.parquet have the auxiliary flag set to true? Use aggregate_column with count operation and filtering.</question>
+      <answer>3264</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>What is the event_id of the first event in the training metadata that has both azimuth greater than 6.0 AND zenith less than 1.0? Use read_slice with complex filtering to find this event.</question>
+      <answer>406</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>Among events in batch_id 1 that have zenith angle between 0.5 and 1.5 radians (inclusive), what is the maximum value of the azimuth column? Use aggregate_column with complex filtering.</question>
+      <answer>6.283107654025021</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>For event_id 79 in batch_1.parquet, how many sensor pulses detected charge values greater than 2.0 photoelectrons? First find the pulse range from metadata (first_pulse_index to last_pulse_index), then use aggregate_column with count and filtering.</question>
+      <answer>18</answer>
+   </qa_pair>
+   <qa_pair>
+      <question>In the training metadata, considering only events where batch_id is either 1 or 2, what is the count of events that have zenith angle less than 1.0 radians? Use aggregate_column with complex filtering (IN clause and comparison).</question>
+      <answer>99207</answer>
+   </qa_pair>
+</evaluation>

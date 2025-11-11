@@ -1,41 +1,47 @@
 # Parquet MCP Server
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI version](https://img.shields.io/pypi/v/parquet-mcp.svg)](https://pypi.org/project/parquet-mcp/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
 
 **Part of [Agent Toolkit](https://iowarp.github.io/agent-toolkit/) - Gnosis Research Center**
 
-Parquet MCP is a comprehensive Model Context Protocol (MCP) server that enables Language Learning Models (LLMs) to access, analyze, and manipulate Parquet columnar data files. This server provides advanced capabilities for efficient data reading, column-based operations, and high-performance anal...
+Model Context Protocol (MCP) server for Apache Parquet files. Provides metadata extraction, column-based operations, and data filtering for AI agents.
 
 ## Quick Start
 
 ```bash
+<<<<<<< HEAD:agent-toolkit-mcp-servers/parquet/README.md
 uvx agent-toolkit parquet
+||||||| 0425fdf:iowarp_mcp_servers/parquet/README.md
+uvx iowarp-mcps parquet
+=======
+# From the monorepo
+cd iowarp-mcps/iowarp_mcp_servers/parquet
+uv run parquet-mcp
+>>>>>>> 1099a6a50f9d621e79b31b4d1aa2b24995c7936a:iowarp_mcp_servers/parquet/README.md
 ```
 
-## Documentation
+## Key Features
 
+<<<<<<< HEAD:agent-toolkit-mcp-servers/parquet/README.md
 - **Full Documentation**: [Agent Toolkit Website](https://iowarp.github.io/agent-toolkit/)
 - **Installation Guide**: See [INSTALLATION.md](../../../CLAUDE.md#setup--installation)
 - **Contributing**: See [Contribution Guide](https://github.com/iowarp/agent-toolkit/wiki/Contribution)
+||||||| 0425fdf:iowarp_mcp_servers/parquet/README.md
+- **Full Documentation**: [IoWarp MCPs Website](https://iowarp.github.io/iowarp-mcps/)
+- **Installation Guide**: See [INSTALLATION.md](../../../CLAUDE.md#setup--installation)
+- **Contributing**: See [Contribution Guide](https://github.com/iowarp/iowarp-mcps/wiki/Contribution)
+=======
+- 16KB payload limit with error messages and suggested slice sizes
+- JSON filtering with compound/nested operations (AND/OR/NOT, comparisons, NULL checks, IN clauses)
+- Column projection and pagination
+- 7 aggregation operations (min, max, mean, sum, count, std, count_distinct)
+- Structured JSON error responses
+- Tested on 131M+ row datasets
+- 192 tests
+>>>>>>> 1099a6a50f9d621e79b31b4d1aa2b24995c7936a:iowarp_mcp_servers/parquet/README.md
 
----
-
-## Description
-
-Parquet MCP is a comprehensive Model Context Protocol (MCP) server that enables Language Learning Models (LLMs) to access, analyze, and manipulate Parquet columnar data files. This server provides advanced capabilities for efficient data reading, column-based operations, and high-performance analytics with seamless integration with AI coding assistants.
-
-**Key Features:**
-- **High-Performance Columnar Access**: Efficient column-based data reading using PyArrow with optimized memory usage
-- **Intelligent Data Processing**: Automatic schema detection and type inference with metadata extraction
-- **Flexible Data Operations**: Resource discovery, column reading, and data preview capabilities
-- **Big Data Support**: Optimized for large datasets with memory-efficient streaming and column selection
-- **Analytics Integration**: Support for data science workflows with pandas and NumPy compatibility
-- **MCP Integration**: Full Model Context Protocol compliance for seamless LLM integration
-
-
-## 🛠️ Installation
+## Installation
 
 ### Requirements
 
@@ -43,9 +49,9 @@ Parquet MCP is a comprehensive Model Context Protocol (MCP) server that enables 
 - [uv](https://docs.astral.sh/uv/) package manager (recommended)
 - PyArrow library for Parquet file processing
 
-<details>
-<summary><b>Install in Cursor</b></summary>
+### Setup and Run
 
+<<<<<<< HEAD:agent-toolkit-mcp-servers/parquet/README.md
 Go to: `Settings` -> `Cursor Settings` -> `MCP` -> `Add new global MCP server`
 
 Pasting the following configuration into your Cursor `~/.cursor/mcp.json` file is the recommended approach. You may also install in a specific project by creating `.cursor/mcp.json` in your project folder. See [Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol) for more info.
@@ -115,160 +121,316 @@ Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude D
 <summary><b>Manual Setup</b></summary>
 
 **Linux/macOS:**
+||||||| 0425fdf:iowarp_mcp_servers/parquet/README.md
+Go to: `Settings` -> `Cursor Settings` -> `MCP` -> `Add new global MCP server`
+
+Pasting the following configuration into your Cursor `~/.cursor/mcp.json` file is the recommended approach. You may also install in a specific project by creating `.cursor/mcp.json` in your project folder. See [Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol) for more info.
+
+```json
+{
+  "mcpServers": {
+    "parquet-mcp": {
+      "command": "uvx",
+      "args": ["iowarp-mcps", "parquet"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary><b>Install in VS Code</b></summary>
+
+Add this to your VS Code MCP config file. See [VS Code MCP docs](https://code.visualstudio.com/docs/copilot/chat/mcp-servers) for more info.
+
+```json
+"mcp": {
+  "servers": {
+    "parquet-mcp": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["iowarp-mcps", "parquet"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary><b>Install in Claude Code</b></summary>
+
+Run this command. See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp) for more info.
+
+```sh
+claude mcp add parquet-mcp -- uvx iowarp-mcps parquet
+```
+
+</details>
+
+<details>
+<summary><b>Install in Claude Desktop</b></summary>
+
+Add this to your Claude Desktop `claude_desktop_config.json` file. See [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) for more info.
+
+```json
+{
+  "mcpServers": {
+    "parquet-mcp": {
+      "command": "uvx",
+      "args": ["iowarp-mcps", "parquet"]
+    }
+  }
+}
+```
+
+</details>
+
+<details>
+<summary><b>Manual Setup</b></summary>
+
+**Linux/macOS:**
+=======
+>>>>>>> 1099a6a50f9d621e79b31b4d1aa2b24995c7936a:iowarp_mcp_servers/parquet/README.md
 ```bash
+<<<<<<< HEAD:agent-toolkit-mcp-servers/parquet/README.md
 CLONE_DIR=$(pwd)
 git clone https://github.com/iowarp/agent-toolkit.git
 uv --directory=$CLONE_DIR/agent-toolkit/agent-toolkit-mcp-servers/parquet run parquet-mcp --help
+||||||| 0425fdf:iowarp_mcp_servers/parquet/README.md
+CLONE_DIR=$(pwd)
+git clone https://github.com/iowarp/iowarp-mcps.git
+uv --directory=$CLONE_DIR/iowarp-mcps/iowarp_mcp_servers/parquet run parquet-mcp --help
+=======
+# Clone the repository
+git clone https://github.com/iowarp/iowarp-mcps.git
+cd iowarp-mcps/iowarp_mcp_servers/parquet
+
+# Install dependencies
+uv sync
+
+# Run the server
+uv run parquet-mcp
+>>>>>>> 1099a6a50f9d621e79b31b4d1aa2b24995c7936a:iowarp_mcp_servers/parquet/README.md
 ```
 
+<<<<<<< HEAD:agent-toolkit-mcp-servers/parquet/README.md
 **Windows CMD:**
 ```cmd
 set CLONE_DIR=%cd%
 git clone https://github.com/iowarp/agent-toolkit.git
 uv --directory=%CLONE_DIR%\agent-toolkit\agent-toolkit-mcp-servers\parquet run parquet-mcp --help
+||||||| 0425fdf:iowarp_mcp_servers/parquet/README.md
+**Windows CMD:**
+```cmd
+set CLONE_DIR=%cd%
+git clone https://github.com/iowarp/iowarp-mcps.git
+uv --directory=%CLONE_DIR%\iowarp-mcps\iowarp_mcp_servers\parquet run parquet-mcp --help
+=======
+### MCP Client Integration
+
+<details>
+<summary><b>Cursor</b></summary>
+
+Create `.cursor/mcp.json` in the parquet server directory:
+
+```json
+{
+  "mcpServers": {
+    "parquet-mcp": {
+      "command": "uv",
+      "args": ["run", "parquet-mcp"],
+      "disabled": false,
+      "env": {}
+    }
+  }
+}
+>>>>>>> 1099a6a50f9d621e79b31b4d1aa2b24995c7936a:iowarp_mcp_servers/parquet/README.md
 ```
 
+<<<<<<< HEAD:agent-toolkit-mcp-servers/parquet/README.md
 **Windows PowerShell:**
 ```powershell
 $env:CLONE_DIR=$PWD
 git clone https://github.com/iowarp/agent-toolkit.git
 uv --directory=$env:CLONE_DIR\agent-toolkit\agent-toolkit-mcp-servers\parquet run parquet-mcp --help
+||||||| 0425fdf:iowarp_mcp_servers/parquet/README.md
+**Windows PowerShell:**
+```powershell
+$env:CLONE_DIR=$PWD
+git clone https://github.com/iowarp/iowarp-mcps.git
+uv --directory=$env:CLONE_DIR\iowarp-mcps\iowarp_mcp_servers\parquet run parquet-mcp --help
+=======
+**Note**: This runs from the current directory, so Cursor must be opened in the `parquet/` directory.
+
+</details>
+
+<details>
+<summary><b>Claude Code</b></summary>
+
+```bash
+# From the parquet directory
+cd iowarp-mcps/iowarp_mcp_servers/parquet
+claude mcp add parquet-mcp -- uv run parquet-mcp
+>>>>>>> 1099a6a50f9d621e79b31b4d1aa2b24995c7936a:iowarp_mcp_servers/parquet/README.md
 ```
 
 </details>
 
-## Available Actions
+## Available Tools
 
-### `list_parquet_resources`
-**Description**: Discover and list all available Parquet files and datasets with comprehensive metadata extraction and schema information.
+### 1. summarize_tool
 
-**Parameters**: None
+Get metadata about a Parquet file without loading data.
 
-**Returns**: Dictionary with list of available Parquet resources including file paths, schemas, and metadata.
-
-### `read_parquet_column`
-**Description**: Read specific columns from Parquet files with efficient columnar access and memory optimization.
-
-**Parameters**:
-- `file_path` (str): Path to the Parquet file
-- `column_name` (str): Name of the column to read
-
-**Returns**: Dictionary with column data, data types, and statistical information.
-
-### `get_parquet_schema`
-**Description**: Extract comprehensive schema information from Parquet files including column types and metadata.
-
-**Parameters**:
+**Parameters:**
 - `file_path` (str): Path to the Parquet file
 
-**Returns**: Dictionary with detailed schema information, column definitions, and file metadata.
+**Returns:** JSON with schema, row count, row groups, and file size
 
-### `preview_parquet_data`
-**Description**: Preview sample data from Parquet files with configurable row limits and column selection.
+### 2. read_slice_tool
 
-**Parameters**:
+Read a horizontal slice of rows with optional column projection and advanced filtering.
+
+**Parameters:**
 - `file_path` (str): Path to the Parquet file
-- `num_rows` (int, optional): Number of rows to preview (default: 10)
-- `columns` (list, optional): Specific columns to preview
+- `start_row` (int): Starting row index (inclusive, 0-based)
+- `end_row` (int): Ending row index (exclusive)
+- `columns` (list[str], optional): List of columns to include
+- `filter_json` (str, optional): JSON filter specification
 
-**Returns**: Dictionary with preview data, schema information, and file statistics.
+**16KB Context Protection:** If the slice exceeds 16KB, returns error with suggested safe parameters.
 
+### 3. get_column_preview_tool
 
+Preview values from a specific column with pagination support.
 
+**Parameters:**
+- `file_path` (str): Path to the Parquet file
+- `column_name` (str): Name of the column to preview
+- `start_index` (int, optional): Starting index for pagination (default: 0)
+- `max_items` (int, optional): Maximum items to return (default: 100, max: 100)
 
+### 4. aggregate_column_tool
 
+Compute statistical aggregations on columns with optional filtering and row ranges.
 
+**Parameters:**
+- `file_path` (str): Path to the Parquet file
+- `column_name` (str): Column to aggregate
+- `operation` (str): One of: min, max, mean, sum, count, std, count_distinct
+- `filter_json` (str, optional): JSON filter specification
+- `start_row` (int, optional): Starting row for range constraint
+- `end_row` (int, optional): Ending row for range constraint
 
-## Examples
+## Filter Format
 
-### 1. Data Discovery and Schema Analysis
-```
-I have Parquet files in my data directory. Can you discover all available files and show me their schemas to understand the data structure?
-```
+JSON-based filtering.
 
-**Tools called:**
-- `list_parquet_resources` - Discover available Parquet files
-- `get_parquet_schema` - Analyze file schemas and structure
+### Simple Filters
 
-This prompt will:
-- Use `list_parquet_resources` to discover all available Parquet files
-- Extract schema information using `get_parquet_schema` for each file
-- Provide comprehensive overview of data structure and organization
-- Enable informed data analysis planning
-
-### 2. Selective Column Analysis
-```
-From the weather data file at /data/weather_measurements.parquet, read the temperature column and show me the data distribution and statistics.
-```
-
-**Tools called:**
-- `read_parquet_column` - Read temperature column data
-- `get_parquet_schema` - Get column metadata and types
-
-This prompt will:
-- Read temperature column using `read_parquet_column` with optimized memory usage
-- Extract column metadata using `get_parquet_schema`
-- Provide statistical analysis and data distribution insights
-- Support focused analytical workflows
-
-### 3. Data Quality Assessment
-```
-Before processing the large dataset at /analytics/customer_data.parquet, preview the first 50 rows to validate data quality and structure.
+```json
+{"column": "temperature", "op": "less", "value": 25.0}
+{"column": "sensor_id", "op": "equal", "value": 42}
+{"column": "status", "op": "in", "values": ["active", "pending"]}
+{"column": "error_code", "op": "is_null"}
 ```
 
-**Tools called:**
-- `preview_parquet_data` - Preview dataset sample
-- `get_parquet_schema` - Get comprehensive schema information
+### Compound Filters
 
-This prompt will:
-- Preview sample data using `preview_parquet_data` with specified row count
-- Analyze data structure using `get_parquet_schema`
-- Enable data quality validation before full processing
-- Support data validation and preprocessing workflows
-
-### 4. Multi-Column Data Exploration
-```
-Explore the sales dataset at /business/quarterly_sales.parquet by reading the revenue, region, and date columns for trend analysis.
+```json
+{
+  "and": [
+    {"column": "temperature", "op": "greater", "value": 20.0},
+    {"column": "temperature", "op": "less", "value": 30.0}
+  ]
+}
 ```
 
-**Tools called:**
-- `read_parquet_column` - Read multiple columns (revenue, region, date)
-- `preview_parquet_data` - Preview multi-column data sample
+### Supported Operations
 
-This prompt will:
-- Read multiple columns using `read_parquet_column` for each required field
-- Preview multi-column data using `preview_parquet_data`
-- Enable comprehensive trend analysis and business intelligence
-- Support multi-dimensional data exploration
+| Operation | Description |
+|-----------|-------------|
+| equal | Equals |
+| not_equal | Not equals |
+| less | Less than |
+| less_equal | Less than or equal |
+| greater | Greater than |
+| greater_equal | Greater than or equal |
+| in, is_in | Value in list |
+| is_null | Column is NULL |
+| is_not_null, is_valid | Column is not NULL |
+| and | Logical AND |
+| or | Logical OR |
+| not | Logical NOT |
 
-### 5. Large Dataset Processing Preparation
+## Testing
+
+192 tests.
+
+```bash
+# Run all tests
+uv run pytest tests/ -v
+
+# Quick smoke test (exclude slow tests)
+uv run pytest tests/ -v -m "not slow"
+
+# Test specific suite
+uv run pytest tests/test_filtering.py -v
 ```
-I need to process a large Parquet dataset at /warehouse/transaction_logs.parquet. Show me the schema, preview sample data, and help me understand the optimal columns for analysis.
+
+**Note on Test Datasets**: The repository includes trimmed datasets for basic testing. Tests requiring the full IceCube datasets are automatically skipped.
+
+## Evaluation
+
+The `evaluation.xml` file contains 10 validation questions that test advanced filtering and aggregation capabilities. To run the full evaluation and get expected outputs, download the complete IceCube Neutrino datasets:
+
+- `batch_1.parquet` through `batch_6.parquet` (~160MB each)
+- `train_meta.parquet` (~3.5GB)
+
+**Dataset Source**: [IceCube Neutrino Path Least Squares - Kaggle](https://www.kaggle.com/code/solverworld/icecube-neutrino-path-least-squares-1-214/input)
+
+Place these files in the `datasets/` directory to enable full evaluation testing.
+
+## Architecture
+
+```
+parquet/                              # iowarp_mcp_servers/parquet/
+├── src/parquet_mcp/
+│   ├── server.py                     # FastMCP server with @mcp.tool decorators
+│   └── capabilities/
+│       └── parquet_handler.py        # Core implementations
+├── tests/                            # 192 tests
+├── datasets/                         # Test Parquet files (44KB trimmed)
+├── pyproject.toml                    # Package configuration
+└── README.md                         # This file
 ```
 
-**Tools called:**
-- `get_parquet_schema` - Analyze dataset structure
-- `preview_parquet_data` - Sample data for understanding
-- `list_parquet_resources` - Verify resource availability
+## Performance
 
-This prompt will:
-- Analyze dataset structure using `get_parquet_schema`
-- Preview sample data using `preview_parquet_data`
-- Verify resource availability using `list_parquet_resources`
-- Provide optimization recommendations for large dataset processing
+Tested on IceCube Neutrino dataset (131M+ rows, 830MB):
 
-### 6. Business Intelligence Data Pipeline
-```
-Set up analysis of our customer behavior data stored in /bi/customer_analytics.parquet by examining schema, previewing key metrics columns, and reading engagement data.
-```
+| Operation | Time | Notes |
+|-----------|------|-------|
+| Summarize | <1s | Metadata only |
+| Read slice (100 rows) | <1s | Direct offset |
+| Filtered slice | 2-5s | Depends on selectivity |
+| Aggregation (min/max) | <10s | Full scan |
 
-**Tools called:**
-- `get_parquet_schema` - Understand data structure
-- `preview_parquet_data` - Preview key metrics
-- `read_parquet_column` - Read engagement data columns
+## License
 
-This prompt will:
-- Analyze data structure using `get_parquet_schema`
-- Preview key business metrics using `preview_parquet_data`
-- Extract engagement data using `read_parquet_column`
-- Support business intelligence and analytics workflows
+MIT License - see LICENSE for details
+
+## Resources
+
+- **IoWarp MCPs Website**: https://iowarp.github.io/iowarp-mcps/
+- **Model Context Protocol**: https://modelcontextprotocol.io/
+- **Apache Parquet**: https://parquet.apache.org/
+- **PyArrow Documentation**: https://arrow.apache.org/docs/python/
+
+## Support
+
+- **Zulip Chat**: https://grc.zulipchat.com/join/bepp44mnzwjnvyewhzumxhnh/
+- **GitHub Issues**: https://github.com/iowarp/iowarp-mcps/issues
+- **Email**: grc@illinoistech.edu

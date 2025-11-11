@@ -1,0 +1,57 @@
+# Development artifacts - DO NOT include in PR
+count_auxiliary.py
+debug_filter.py
+main.py
+FILTER_TEST_SUMMARY.md
+TEST_SUITE_COMPLETE.md
+TEST_SUITE_STATUS.md
+workflow_log.json
+.mcp.json
+
+# Standard Python ignores
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.cursor/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# macOS
+.DS_Store
+
+# UV
+uv.lock
