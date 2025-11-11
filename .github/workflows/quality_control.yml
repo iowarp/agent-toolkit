@@ -20,11 +20,11 @@ jobs:
     - name: Discover MCP directories
       id: discover
       run: |
-        # Find all directories in iowarp_mcp_servers/ that have a pyproject.toml file
+        # Find all directories in agent-toolkit-mcp-servers/ that have a pyproject.toml file
         # Exclude Chronolog (has dedicated test-chronomcp.yml workflow)
         blacklisted_mcps="chronolog|Chronolog"
 
-        mcps_list=$(find iowarp_mcp_servers -maxdepth 1 -type d -exec test -f {}/pyproject.toml \; -print | sed 's|iowarp_mcp_servers/||' | sort)
+        mcps_list=$(find agent-toolkit-mcp-servers -maxdepth 1 -type d -exec test -f {}/pyproject.toml \; -print | sed 's|agent-toolkit-mcp-servers/||' | sort)
 
         # Filter out blacklisted MCPs
         mcps_list=$(echo "$mcps_list" | grep -v -E "^($blacklisted_mcps)$")
@@ -57,7 +57,7 @@ jobs:
     
     - name: Install dependencies for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -f pyproject.toml ]; then
           uv sync --all-extras --dev
         fi
@@ -65,12 +65,12 @@ jobs:
 
     - name: Run Ruff linter on ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         uv run ruff check --output-format=github .
 
     - name: Run Ruff formatter check on ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         uv run ruff format --check . 
 
   mypy:
@@ -97,7 +97,7 @@ jobs:
     
     - name: Install dependencies for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -f pyproject.toml ]; then
           uv sync --all-extras --dev
         fi
@@ -105,7 +105,7 @@ jobs:
 
     - name: Run MyPy on ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -d src ]; then
           uv run mypy src/ --ignore-missing-imports --show-error-codes --no-error-summary 
         else
@@ -136,7 +136,7 @@ jobs:
     
     - name: Install dependencies for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -f pyproject.toml ]; then
           uv sync --all-extras --dev
         fi
@@ -144,7 +144,7 @@ jobs:
 
     - name: Run tests with coverage for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -d tests ]; then
           uv run pytest tests/ -v --tb=short --cov=src --cov-report=xml --cov-report=html --cov-report=term
         else
@@ -153,9 +153,9 @@ jobs:
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
-      if: hashFiles('iowarp_mcp_servers/${{ matrix.mcp }}/coverage.xml') != ''
+      if: hashFiles('agent-toolkit-mcp-servers/${{ matrix.mcp }}/coverage.xml') != ''
       with:
-        file: iowarp_mcp_servers/${{ matrix.mcp }}/coverage.xml
+        file: agent-toolkit-mcp-servers/${{ matrix.mcp }}/coverage.xml
         flags: ${{ matrix.mcp }}
         name: codecov-${{ matrix.mcp }}
         fail_ci_if_error: false
@@ -163,10 +163,10 @@ jobs:
 
     - name: Upload coverage HTML report
       uses: actions/upload-artifact@v4
-      if: hashFiles('iowarp_mcp_servers/${{ matrix.mcp }}/htmlcov/') != ''
+      if: hashFiles('agent-toolkit-mcp-servers/${{ matrix.mcp }}/htmlcov/') != ''
       with:
         name: coverage-html-${{ matrix.mcp }}
-        path: iowarp_mcp_servers/${{ matrix.mcp }}/htmlcov/
+        path: agent-toolkit-mcp-servers/${{ matrix.mcp }}/htmlcov/
 
   security:
     name: Security Audit - ${{ matrix.mcp }}
@@ -192,7 +192,7 @@ jobs:
     
     - name: Install dependencies for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -f pyproject.toml ]; then
           uv sync --all-extras --dev
         fi
@@ -200,7 +200,7 @@ jobs:
 
     - name: Run security audit for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -f pyproject.toml ]; then
           uv run pip-audit
         else
@@ -231,7 +231,7 @@ jobs:
     
     - name: Install dependencies for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -f pyproject.toml ]; then
           uv sync --all-extras --dev
         fi
@@ -239,7 +239,7 @@ jobs:
 
     - name: Run tests for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -d tests ]; then
           uv run pytest tests/ --tb=short -v
         else
@@ -270,7 +270,7 @@ jobs:
     
     - name: Install dependencies for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -f pyproject.toml ]; then
           uv sync --all-extras --dev
         fi
@@ -278,7 +278,7 @@ jobs:
 
     - name: Run tests for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -d tests ]; then
           uv run pytest tests/ --tb=short -v
         else
@@ -309,7 +309,7 @@ jobs:
     
     - name: Install dependencies for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -f pyproject.toml ]; then
           uv sync --all-extras --dev
         fi
@@ -317,7 +317,7 @@ jobs:
 
     - name: Run tests for ${{ matrix.mcp }}
       run: |
-        cd iowarp_mcp_servers/${{ matrix.mcp }}
+        cd agent-toolkit-mcp-servers/${{ matrix.mcp }}
         if [ -d tests ]; then
           uv run pytest tests/ --tb=short -v
         else

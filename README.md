@@ -1,24 +1,24 @@
-# IoWarp MCPs
+# Agent Toolkit
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI version](https://img.shields.io/pypi/v/iowarp-mcps.svg)](https://pypi.org/project/iowarp-mcps/)
+[![PyPI version](https://img.shields.io/pypi/v/agent-toolkit.svg)](https://pypi.org/project/agent-toolkit/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
 [![FastMCP](https://img.shields.io/badge/FastMCP-2.12-purple)](https://gofastmcp.com)
-[![CI](https://github.com/iowarp/iowarp-mcps/actions/workflows/quality_control.yml/badge.svg)](https://github.com/iowarp/iowarp-mcps/actions/workflows/quality_control.yml)
-[![Coverage](https://codecov.io/gh/iowarp/iowarp-mcps/branch/main/graph/badge.svg)](https://codecov.io/gh/iowarp/iowarp-mcps)
+[![CI](https://github.com/iowarp/agent-toolkit/actions/workflows/quality_control.yml/badge.svg)](https://github.com/iowarp/agent-toolkit/actions/workflows/quality_control.yml)
+[![Coverage](https://codecov.io/gh/iowarp/agent-toolkit/branch/main/graph/badge.svg)](https://codecov.io/gh/iowarp/agent-toolkit)
 
-[![Tests](https://img.shields.io/badge/Tests-15%20MCP%20Packages-blue)](https://github.com/iowarp/iowarp-mcps/actions/workflows/test-mcps.yml)
+[![Tests](https://img.shields.io/badge/Tests-15%20MCP%20Packages-blue)](https://github.com/iowarp/agent-toolkit/actions/workflows/test-mcps.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 [![MyPy](https://img.shields.io/badge/mypy-checked-blue)](http://mypy-lang.org/)
 [![uv](https://img.shields.io/badge/uv-managed-orange)](https://github.com/astral-sh/uv)
 
-**AI Tools for Scientific Computing** - Model Context Protocol servers enabling AI agents to interact with HPC resources, scientific data formats, and research datasets.
+**Agent Toolkit** - Part of the IoWarp platform's tooling layer for AI agents. A comprehensive collection of tools, skills, plugins, and extensions. Currently featuring 15+ Model Context Protocol (MCP) servers for scientific computing, with plans to expand to additional agent capabilities. Enables AI agents to interact with HPC resources, scientific data formats, and research datasets.
 
-**Website**: [https://iowarp.github.io/iowarp-mcps/](https://iowarp.github.io/iowarp-mcps/) | **Chat**: [Zulip Community](https://grc.zulipchat.com/#narrow/channel/518574-iowarp-mcps) | Developed by <img src="https://grc.iit.edu/img/logo.png" alt="GRC Logo" width="18" height="18"> **[Gnosis Research Center (GRC)](https://grc.iit.edu/)**
+**Website**: [https://iowarp.github.io/agent-toolkit/](https://iowarp.github.io/agent-toolkit/) | **Chat**: [Zulip Community](https://grc.zulipchat.com/#narrow/channel/518574-agent-toolkit) | Developed by <img src="https://grc.iit.edu/img/logo.png" alt="GRC Logo" width="18" height="18"> **[Gnosis Research Center (GRC)](https://grc.iit.edu/)**
 
 ---
 
-## ❌ Without IoWarp MCPs
+## ❌ Without Agent Toolkit
 
 Working with scientific data and HPC resources requires manual scripting and tool-specific knowledge:
 
@@ -28,7 +28,7 @@ Working with scientific data and HPC resources requires manual scripting and too
 - ❌ No AI assistance for scientific workflows
 - ❌ Repetitive coding for common research tasks
 
-## ✅ With IoWarp MCPs
+## ✅ With Agent Toolkit
 
 AI agents handle scientific computing tasks through natural language:
 
@@ -40,7 +40,9 @@ AI agents handle scientific computing tasks through natural language:
 
 **One unified interface. 15 MCP servers. 150+ specialized tools. Built for research.**
 
-IoWarp MCPs brings AI assistance to your scientific computing workflow—whether you're analyzing terabytes of HDF5 data, managing Slurm jobs across clusters, or exploring research papers. Built by researchers, for researchers, at Illinois Institute of Technology with NSF support.
+Agent Toolkit is part of the IoWarp platform's comprehensive tooling ecosystem for AI agents. It brings AI assistance to your scientific computing workflow—whether you're analyzing terabytes of HDF5 data, managing Slurm jobs across clusters, or exploring research papers. Built by researchers, for researchers, at Illinois Institute of Technology with NSF support.
+
+> **Part of IoWarp Platform**: Agent Toolkit is the tooling layer of the IoWarp platform, providing skills, plugins, and extensions for AI agents working in scientific computing environments.
 
 > **One simple command.** Production-ready, fully typed, MIT licensed, and beta-tested in real HPC environments.
 
@@ -50,12 +52,12 @@ IoWarp MCPs brings AI assistance to your scientific computing workflow—whether
 
 ```bash
 # List all 15 available MCP servers
-uvx iowarp-mcps
+uvx agent-toolkit
 
 # Run any server instantly
-uvx iowarp-mcps hdf5
-uvx iowarp-mcps pandas
-uvx iowarp-mcps slurm
+uvx agent-toolkit hdf5
+uvx agent-toolkit pandas
+uvx agent-toolkit slurm
 ```
 
 <details>
@@ -68,15 +70,15 @@ Add to your Cursor `~/.cursor/mcp.json`:
   "mcpServers": {
     "hdf5-mcp": {
       "command": "uvx",
-      "args": ["iowarp-mcps", "hdf5"]
+      "args": ["agent-toolkit", "hdf5"]
     },
     "pandas-mcp": {
       "command": "uvx",
-      "args": ["iowarp-mcps", "pandas"]
+      "args": ["agent-toolkit", "pandas"]
     },
     "slurm-mcp": {
       "command": "uvx",
-      "args": ["iowarp-mcps", "slurm"]
+      "args": ["agent-toolkit", "slurm"]
     }
   }
 }
@@ -91,13 +93,13 @@ See [Cursor MCP docs](https://docs.cursor.com/context/model-context-protocol) fo
 
 ```bash
 # Add HDF5 MCP
-claude mcp add hdf5-mcp -- uvx iowarp-mcps hdf5
+claude mcp add hdf5-mcp -- uvx agent-toolkit hdf5
 
 # Add Pandas MCP
-claude mcp add pandas-mcp -- uvx iowarp-mcps pandas
+claude mcp add pandas-mcp -- uvx agent-toolkit pandas
 
 # Add Slurm MCP
-claude mcp add slurm-mcp -- uvx iowarp-mcps slurm
+claude mcp add slurm-mcp -- uvx agent-toolkit slurm
 ```
 
 See [Claude Code MCP docs](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/tutorials#set-up-model-context-protocol-mcp) for more info.
@@ -115,12 +117,12 @@ Add to your VS Code MCP config:
     "hdf5-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["iowarp-mcps", "hdf5"]
+      "args": ["agent-toolkit", "hdf5"]
     },
     "pandas-mcp": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["iowarp-mcps", "pandas"]
+      "args": ["agent-toolkit", "pandas"]
     }
   }
 }
@@ -140,11 +142,11 @@ Edit `claude_desktop_config.json`:
   "mcpServers": {
     "hdf5-mcp": {
       "command": "uvx",
-      "args": ["iowarp-mcps", "hdf5"]
+      "args": ["agent-toolkit", "hdf5"]
     },
     "arxiv-mcp": {
       "command": "uvx",
-      "args": ["iowarp-mcps", "arxiv"]
+      "args": ["agent-toolkit", "arxiv"]
     }
   }
 }
@@ -160,21 +162,21 @@ See [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) f
 
 | 📦 **Package** | 📌 **Ver** | 🔧 **System** | 📋 **Description** | ⚡ **Install Command** |
 |:---|:---:|:---:|:---|:---|
-| **`adios`** | 1.0 | Data I/O | Read data using ADIOS2 engine | `uvx iowarp-mcps adios` |
-| **`arxiv`** | 1.0 | Research | Fetch research papers from ArXiv | `uvx iowarp-mcps arxiv` |
-| **`chronolog`** | 1.0 | Logging | Log and retrieve data from ChronoLog | `uvx iowarp-mcps chronolog` |
-| **`compression`** | 1.0 | Utilities | File compression with gzip | `uvx iowarp-mcps compression` |
-| **`darshan`** | 1.0 | Performance | I/O performance trace analysis | `uvx iowarp-mcps darshan` |
-| **`hdf5`** | 2.1 | Data I/O | HPC-optimized scientific data with 27 tools, AI insights, caching, streaming | `uvx iowarp-mcps hdf5` |
-| **`jarvis`** | 1.0 | Workflow | Data pipeline lifecycle management | `uvx iowarp-mcps jarvis` |
-| **`lmod`** | 1.0 | Environment | Environment module management | `uvx iowarp-mcps lmod` |
-| **`ndp`** | 1.0 | Data Protocol | Search and discover datasets across CKAN instances | `uvx iowarp-mcps ndp` |
-| **`node-hardware`** | 1.0 | System | System hardware information | `uvx iowarp-mcps node-hardware` |
-| **`pandas`** | 1.0 | Data Analysis | CSV data loading and filtering | `uvx iowarp-mcps pandas` |
-| **`parallel-sort`** | 1.0 | Computing | Large file sorting simulation | `uvx iowarp-mcps parallel-sort` |
-| **`parquet`** | 1.0 | Data I/O | Read Parquet file columns | `uvx iowarp-mcps parquet` |
-| **`plot`** | 1.0 | Visualization | Generate plots from CSV data | `uvx iowarp-mcps plot` |
-| **`slurm`** | 1.0 | HPC | Job submission simulation | `uvx iowarp-mcps slurm` |
+| **`adios`** | 1.0 | Data I/O | Read data using ADIOS2 engine | `uvx agent-toolkit adios` |
+| **`arxiv`** | 1.0 | Research | Fetch research papers from ArXiv | `uvx agent-toolkit arxiv` |
+| **`chronolog`** | 1.0 | Logging | Log and retrieve data from ChronoLog | `uvx agent-toolkit chronolog` |
+| **`compression`** | 1.0 | Utilities | File compression with gzip | `uvx agent-toolkit compression` |
+| **`darshan`** | 1.0 | Performance | I/O performance trace analysis | `uvx agent-toolkit darshan` |
+| **`hdf5`** | 2.1 | Data I/O | HPC-optimized scientific data with 27 tools, AI insights, caching, streaming | `uvx agent-toolkit hdf5` |
+| **`jarvis`** | 1.0 | Workflow | Data pipeline lifecycle management | `uvx agent-toolkit jarvis` |
+| **`lmod`** | 1.0 | Environment | Environment module management | `uvx agent-toolkit lmod` |
+| **`ndp`** | 1.0 | Data Protocol | Search and discover datasets across CKAN instances | `uvx agent-toolkit ndp` |
+| **`node-hardware`** | 1.0 | System | System hardware information | `uvx agent-toolkit node-hardware` |
+| **`pandas`** | 1.0 | Data Analysis | CSV data loading and filtering | `uvx agent-toolkit pandas` |
+| **`parallel-sort`** | 1.0 | Computing | Large file sorting simulation | `uvx agent-toolkit parallel-sort` |
+| **`parquet`** | 1.0 | Data I/O | Read Parquet file columns | `uvx agent-toolkit parquet` |
+| **`plot`** | 1.0 | Visualization | Generate plots from CSV data | `uvx agent-toolkit plot` |
+| **`slurm`** | 1.0 | HPC | Job submission simulation | `uvx agent-toolkit slurm` |
 
 </div>
 
@@ -229,11 +231,11 @@ See [Claude Desktop MCP docs](https://modelcontextprotocol.io/quickstart/user) f
 <details>
 <summary><b>Server Not Found Error</b></summary>
 
-If `uvx iowarp-mcps <server-name>` fails:
+If `uvx agent-toolkit <server-name>` fails:
 
 ```bash
 # Verify server name is correct
-uvx iowarp-mcps
+uvx agent-toolkit
 
 # Common names: hdf5, pandas, slurm, arxiv (not hdf5-mcp, pandas-mcp)
 ```
@@ -246,7 +248,7 @@ uvx iowarp-mcps
 For development or local testing:
 
 ```bash
-cd iowarp_mcp_servers/hdf5
+cd agent-toolkit-mcp-servers/hdf5
 uv sync --all-extras --dev
 uv run hdf5-mcp
 ```
@@ -284,23 +286,23 @@ pip install uv
 
 <img src="https://www.nsf.gov/themes/custom/nsf_theme/components/molecules/logo/logo-desktop.png" alt="NSF Logo" width="24" height="24"> **[NSF (National Science Foundation)](https://www.nsf.gov/)** - Supporting scientific computing research and AI integration initiatives
 
- > we welcome more sponsorships. please contact the [Principal Investigator](mailto:akougkas@illinoistech.edu)
+ > we welcome more sponsorships. please contact the [Principal Investigator](mailto:grc@illinoistech.edu)
 
 ## Ways to Contribute
 
-- **Submit Issues**: Report bugs or request features via [GitHub Issues](https://github.com/iowarp/iowarp-mcps/issues)
+- **Submit Issues**: Report bugs or request features via [GitHub Issues](https://github.com/iowarp/agent-toolkit/issues)
 - **Develop New MCPs**: Add servers for your research tools ([CONTRIBUTING.md](CONTRIBUTING.md))
 - **Improve Documentation**: Help make guides clearer
-- **Share Use Cases**: Tell us how you're using IoWarp MCPs in your research
+- **Share Use Cases**: Tell us how you're using Agent Toolkit in your research
 
 **Full Guide**: [CONTRIBUTING.md](CONTRIBUTING.md) 
 
 ### Community & Support
 
-- **Chat**: [Zulip Community](https://grc.zulipchat.com/#narrow/channel/518574-iowarp-mcps)
-- **Issues**: [GitHub Issues](https://github.com/iowarp/iowarp-mcps/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/iowarp/iowarp-mcps/discussions)
-- **Website**: [https://iowarp.github.io/iowarp-mcps/](https://iowarp.github.io/iowarp-mcps/)
+- **Chat**: [Zulip Community](https://iowarp.zulipchat.com/#narrow/channel/agent-toolkit)
+- **Issues**: [GitHub Issues](https://github.com/iowarp/agent-toolkit/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/iowarp/agent-toolkit/discussions)
+- **Website**: [https://iowarp.ai/agent-toolkit/](https://iowarp.ai/agent-toolkit/)
 - **Project**: [IOWarp Project](https://iowarp.ai)
 
 ---

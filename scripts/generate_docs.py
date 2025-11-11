@@ -383,7 +383,7 @@ Add this to your MCP client configuration:
   "mcpServers": {{
     "{mcp_data['name'].lower()}-mcp": {{
       "command": "uvx",
-      "args": ["iowarp-mcps", "{mcp_data['slug'].replace('_', '-')}"]
+      "args": ["agent-toolkit", "{mcp_data['slug'].replace('_', '-')}"]
     }}
   }}
 }}

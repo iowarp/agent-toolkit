@@ -1,6 +1,6 @@
-# Contributing to IoWarp MCPs
+# Contributing to Agent Toolkit
 
-Thank you for your interest in contributing to IoWarp MCPs! This guide will help you get started with development, testing, and submitting contributions.
+Thank you for your interest in contributing to Agent Toolkit! This guide will help you get started with development, testing, and submitting contributions.
 
 ## Table of Contents
 
@@ -25,8 +25,8 @@ Thank you for your interest in contributing to IoWarp MCPs! This guide will help
 
 ```bash
 # Clone the repository
-git clone https://github.com/iowarp/iowarp-mcps.git
-cd iowarp-mcps
+git clone https://github.com/iowarp/agent-toolkit.git
+cd agent-toolkit
 
 # Install all dependencies (development mode)
 uv sync --all-extras --dev
@@ -36,7 +36,7 @@ uv sync --all-extras --dev
 
 ```bash
 # Navigate to the server directory
-cd iowarp_mcp_servers/hdf5
+cd agent-toolkit-mcp-servers/hdf5
 
 # Install dependencies
 uv sync --all-extras --dev
@@ -44,12 +44,12 @@ uv sync --all-extras --dev
 
 ## Project Structure
 
-IoWarp MCPs uses a **monorepo architecture** with a unified launcher:
+Agent Toolkit uses a **monorepo architecture** with a unified launcher:
 
 ```
-iowarp-mcps/
-├── src/iowarp_mcps/           # Unified launcher CLI
-├── iowarp_mcp_servers/         # 15 independent MCP servers
+agent-toolkit/
+├── src/agent_toolkit/           # Unified launcher CLI
+├── agent-toolkit-mcp-servers/         # 15 independent MCP servers
 │   ├── hdf5/                  # Each server has:
 │   │   ├── src/               # - Source code
 │   │   ├── tests/             # - Test suite
@@ -62,7 +62,7 @@ iowarp-mcps/
 
 **Key Principles:**
 - Each MCP server is **independently developed and tested**
-- Servers are **launched through a single unified command**: `iowarp-mcps <server-name>`
+- Servers are **launched through a single unified command**: `agent-toolkit <server-name>`
 - **Dependency isolation** via individual `pyproject.toml` files
 - **Auto-discovery** pattern for new servers
 
@@ -71,7 +71,7 @@ iowarp-mcps/
 ### Test a Single Server
 
 ```bash
-cd iowarp_mcp_servers/hdf5
+cd agent-toolkit-mcp-servers/hdf5
 
 # Run all tests
 uv run pytest -v
@@ -90,7 +90,7 @@ uv run pytest --cov=src/ --cov-report=html --cov-report=term
 
 ```bash
 # From root directory
-for server in iowarp_mcp_servers/*/; do
+for server in agent-toolkit-mcp-servers/*/; do
     echo "Testing $server"
     cd "$server" && uv run pytest -v && cd - || exit 1
 done
@@ -103,7 +103,7 @@ We enforce strict code quality standards through automated CI checks. **All chec
 ### Ruff (Linting + Formatting)
 
 ```bash
-cd iowarp_mcp_servers/hdf5
+cd agent-toolkit-mcp-servers/hdf5
 
 # Check linting
 uv run ruff check .
@@ -121,7 +121,7 @@ uv run ruff format .
 ### MyPy (Type Checking)
 
 ```bash
-cd iowarp_mcp_servers/hdf5
+cd agent-toolkit-mcp-servers/hdf5
 
 # Run type checking
 uv run mypy src/ --ignore-missing-imports
@@ -130,7 +130,7 @@ uv run mypy src/ --ignore-missing-imports
 ### pip-audit (Security)
 
 ```bash
-cd iowarp_mcp_servers/hdf5
+cd agent-toolkit-mcp-servers/hdf5
 
 # Scan for vulnerabilities
 uv run pip-audit
@@ -139,7 +139,7 @@ uv run pip-audit
 ### Run All Quality Checks (Mimic CI)
 
 ```bash
-cd iowarp_mcp_servers/hdf5
+cd agent-toolkit-mcp-servers/hdf5
 
 uv run ruff check .
 uv run ruff format . --check
@@ -159,7 +159,7 @@ uv run pip-audit
 
 2. **Ensure all tests pass**:
    ```bash
-   cd iowarp_mcp_servers/your-server
+   cd agent-toolkit-mcp-servers/your-server
    uv run pytest -v
    ```
 
@@ -213,8 +213,8 @@ Follow these steps to add a new MCP server to the monorepo:
 
 ```bash
 # Use kebab-case for directory name
-mkdir -p iowarp_mcp_servers/my-server/src/my_server_mcp
-mkdir -p iowarp_mcp_servers/my-server/tests
+mkdir -p agent-toolkit-mcp-servers/my-server/src/my_server_mcp
+mkdir -p agent-toolkit-mcp-servers/my-server/tests
 ```
 
 ### 2. Create `pyproject.toml`
@@ -288,12 +288,12 @@ def test_my_tool():
 
 ### 5. Create README.md
 
-Use the standard template from existing servers (see `iowarp_mcp_servers/hdf5/README.md` as reference).
+Use the standard template from existing servers (see `agent-toolkit-mcp-servers/hdf5/README.md` as reference).
 
 ### 6. Test Your Server
 
 ```bash
-cd iowarp_mcp_servers/my-server
+cd agent-toolkit-mcp-servers/my-server
 uv sync --all-extras --dev
 uv run pytest -v
 uv run ruff check .
@@ -304,10 +304,10 @@ uv run mypy src/
 
 ```bash
 # From root directory
-uvx iowarp-mcps
+uvx agent-toolkit
 
 # Your server should appear in the list
-uvx iowarp-mcps my-server
+uvx agent-toolkit my-server
 ```
 
 ## Issue Reporting
@@ -363,9 +363,9 @@ What actually happens
 
 ### Get Help
 
-- **Zulip Chat**: [IoWarp-mcp Community](https://grc.zulipchat.com/#narrow/channel/518574-iowarp-mcps)
-- **GitHub Discussions**: [Ask questions](https://github.com/iowarp/iowarp-mcps/discussions)
-- **GitHub Issues**: [Report bugs](https://github.com/iowarp/iowarp-mcps/issues)
+- **Zulip Chat**: [IoWarp-mcp Community](https://grc.zulipchat.com/#narrow/channel/518574-agent-toolkit)
+- **GitHub Discussions**: [Ask questions](https://github.com/iowarp/agent-toolkit/discussions)
+- **GitHub Issues**: [Report bugs](https://github.com/iowarp/agent-toolkit/issues)
 
 ### Contributing Guidelines
 
@@ -426,11 +426,11 @@ uv run <server-name>-mcp
 
 ---
 
-**Thank you for contributing to IoWarp MCPs!**
+**Thank you for contributing to Agent Toolkit!**
 
 Your contributions help advance AI integration in scientific computing. 
 
 For more information, visit:
-- **Website**: [https://iowarp.github.io/iowarp-mcps/](https://iowarp.github.io/iowarp-mcps/)
-- **Repository**: [https://github.com/iowarp/iowarp-mcps](https://github.com/iowarp/iowarp-mcps)
+- **Website**: [https://iowarp.github.io/agent-toolkit/](https://iowarp.github.io/agent-toolkit/)
+- **Repository**: [https://github.com/iowarp/agent-toolkit](https://github.com/iowarp/agent-toolkit)
 - **Gnosis Research Center**: [https://grc.iit.edu/](https://grc.iit.edu/)

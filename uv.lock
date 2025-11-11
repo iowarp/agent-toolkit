@@ -24,7 +24,7 @@ wheels = [
 ]
 
 [[package]]
-name = "iowarp-mcps"
+name = "agent-toolkit"
 version = "0.4.0"
 source = { editable = "." }
 dependencies = [

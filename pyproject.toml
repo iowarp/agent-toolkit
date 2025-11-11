@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "iowarp-mcps"
+name = "agent-toolkit"
 version = "0.4.0"
-description = "Open Source MCP Servers for Scientific Computing"
+description = "Agent Toolkit - MCP Servers, Clients, and Tools for AI Agents"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -19,25 +19,25 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/iowarp/iowarp-mcps"
-Repository = "https://github.com/iowarp/iowarp-mcps"
-Issues = "https://github.com/iowarp/iowarp-mcps/issues"
+Homepage = "https://github.com/iowarp/agent-toolkit"
+Repository = "https://github.com/iowarp/agent-toolkit"
+Issues = "https://github.com/iowarp/agent-toolkit/issues"
 
 [project.scripts]
 # Only the unified launcher entry point
-iowarp-mcps = "iowarp_mcps:cli"
+agent-toolkit = "agent_toolkit:cli"
 
 [tool.hatch.build]
 sources = ["src"]
 
 # Include all server directories in the wheel for uvx execution
 [tool.hatch.build.targets.wheel.shared-data]
-"iowarp_mcp_servers" = "iowarp_mcp_servers"
+"agent-toolkit-mcp-servers" = "agent-toolkit-mcp-servers"
 
 [tool.hatch.build.targets.sdist]
 include = [
     "src/",
-    "iowarp_mcp_servers/",
+    "agent-toolkit-mcp-servers/",
     "README.md",
     "pyproject.toml"
 ]
