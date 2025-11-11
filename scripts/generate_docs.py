@@ -596,6 +596,30 @@ final_result = finalize_output(processed)
                             key=lambda k: len(mcps_data[k]['actions']), 
                             reverse=True)[:6]
         
+        # Category types for TypeScript/JSDoc
+        category_types = {
+            "Data Processing": "data",
+            "Analysis & Visualization": "analysis",
+            "System Management": "system",
+            "Utilities": "util"
+        }
+
+        # GitHub stats placeholder
+        github_stats = {
+            "stars": 0,
+            "forks": 0,
+            "watchers": 0,
+            "url": "https://github.com/iowarp/agent-toolkit"
+        }
+
+        # MCP endorsements/badges
+        mcp_endorsement = {
+            "hdf5": ["flagship", "v2.0"],
+            "slurm": ["hpc"],
+            "arxiv": ["research"],
+            "pandas": ["data"]
+        }
+
         content = f"""// MCP data structure for tile-based showcase
 export const mcpData = {json.dumps(js_mcps, indent=2)};
 
@@ -604,6 +628,15 @@ export const categories = {json.dumps(categories, indent=2)};
 
 // Popular MCPs for featured section
 export const popularMcps = {json.dumps(popular_mcps, indent=2)};
+
+// Category type mappings
+export const categoryTypes = {json.dumps(category_types, indent=2)};
+
+// GitHub repository statistics
+export const githubStats = {json.dumps(github_stats, indent=2)};
+
+// MCP endorsements and badges
+export const mcpEndorsement = {json.dumps(mcp_endorsement, indent=2)};
 """
         
         output_file = self.data_output_dir / "mcpData.js"
