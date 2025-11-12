@@ -5,7 +5,12 @@ Additional edge case tests to push coverage above 90%.
 import pytest
 import tempfile
 import os
-from implementation.export_handler import export_to_json, export_to_csv, export_to_text, export_summary_report
+from implementation.export_handler import (
+    export_to_json,
+    export_to_csv,
+    export_to_text,
+    export_summary_report,
+)
 from implementation.filter_handler import filter_by_time_range
 from implementation.sort_handler import sort_log_by_timestamp
 from implementation.parallel_processor import parallel_sort_large_file
@@ -19,10 +24,7 @@ class TestEdgeCases:
     @pytest.mark.asyncio
     async def test_export_json_with_no_metadata(self):
         """Test JSON export without metadata."""
-        data = {
-            "sorted_lines": ["2024-01-01 10:00:00 INFO Test"],
-            "total_lines": 1
-        }
+        data = {"sorted_lines": ["2024-01-01 10:00:00 INFO Test"], "total_lines": 1}
         result = await export_to_json(data, include_metadata=False)
         assert "content" in result or "error" not in result
 
@@ -32,7 +34,7 @@ class TestEdgeCases:
         data = {
             "sorted_lines": [
                 "2024-01-01 10:00:00 INFO Test",
-                "2024-01-02 11:00:00 ERROR Error"
+                "2024-01-02 11:00:00 ERROR Error",
             ]
         }
         result = await export_to_csv(data, include_headers=False)
@@ -41,9 +43,7 @@ class TestEdgeCases:
     @pytest.mark.asyncio
     async def test_export_text_without_summary(self):
         """Test text export without summary."""
-        data = {
-            "sorted_lines": ["2024-01-01 10:00:00 INFO Test"]
-        }
+        data = {"sorted_lines": ["2024-01-01 10:00:00 INFO Test"]}
         result = await export_to_text(data, include_summary=False)
         assert "content" in result
 
@@ -53,26 +53,18 @@ class TestEdgeCases:
         data = {
             "sorted_lines": [
                 "2024-01-01 10:00:00 INFO Test",
-                "2024-01-01 11:00:00 ERROR Error"
+                "2024-01-01 11:00:00 ERROR Error",
             ],
             "total_lines": 2,
             "time_analysis": {
                 "time_range": {
                     "start": "2024-01-01 10:00:00",
                     "end": "2024-01-01 11:00:00",
-                    "duration_seconds": 3600
+                    "duration_seconds": 3600,
                 },
-                "peak_activity": {
-                    "hour": 10,
-                    "count": 1
-                }
+                "peak_activity": {"hour": 10, "count": 1},
             },
-            "statistics": {
-                "level_distribution": {
-                    "INFO": 1,
-                    "ERROR": 1
-                }
-            }
+            "statistics": {"level_distribution": {"INFO": 1, "ERROR": 1}},
         }
         result = await export_summary_report(data)
         assert "content" in result
@@ -92,7 +84,7 @@ class TestEdgeCases:
             result = await filter_by_time_range(
                 temp_path,
                 "2024-01-01T09:00:00",  # ISO format
-                "2024-01-01T11:00:00"   # ISO format
+                "2024-01-01T11:00:00",  # ISO format
             )
             assert result["matched_lines"] == 1
         finally:
@@ -116,7 +108,7 @@ class TestEdgeCases:
             config = {
                 "error_cluster_threshold": 2,
                 "time_window_minutes": 15,
-                "pattern_min_occurrences": 2
+                "pattern_min_occurrences": 2,
             }
             result = await detect_patterns(temp_path, config)
             assert "error_clusters" in result or "patterns" in result
@@ -145,10 +137,9 @@ class TestEdgeCases:
     @pytest.mark.asyncio
     async def test_parallel_sort_with_custom_workers(self):
         """Test parallel sort with custom worker count."""
-        content = "\n".join([
-            f"2024-01-{i:02d} 10:00:00 INFO Entry {i}"
-            for i in range(1, 20)
-        ])
+        content = "\n".join(
+            [f"2024-01-{i:02d} 10:00:00 INFO Entry {i}" for i in range(1, 20)]
+        )
 
         with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".log") as f:
             f.write(content)
@@ -158,9 +149,7 @@ class TestEdgeCases:
 
         try:
             result = await parallel_sort_large_file(
-                input_path,
-                chunk_size_mb=1,
-                max_workers=2
+                input_path, chunk_size_mb=1, max_workers=2
             )
             assert "sorted_lines" in result or "error" in result
         finally:
@@ -176,7 +165,9 @@ class TestEdgeCases:
 2024-01-01 08:00:00 INFO Üñíçödé characters
 2024-01-01 09:00:00 ERROR 日本語 Japanese text"""
 
-        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".log", encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", delete=False, suffix=".log", encoding="utf-8"
+        ) as f:
             f.write(content)
             temp_path = f.name
 
@@ -196,7 +187,9 @@ class TestEdgeCases:
 
         from implementation.filter_handler import filter_by_keyword
 
-        with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".log", encoding="utf-8") as f:
+        with tempfile.NamedTemporaryFile(
+            mode="w", delete=False, suffix=".log", encoding="utf-8"
+        ) as f:
             f.write(content)
             temp_path = f.name
 
@@ -211,13 +204,10 @@ class TestEdgeCases:
         """Test export handlers with large datasets."""
         data = {
             "sorted_lines": [
-                f"2024-01-{i % 30 + 1:02d} 10:00:00 INFO Entry {i}"
-                for i in range(100)
+                f"2024-01-{i % 30 + 1:02d} 10:00:00 INFO Entry {i}" for i in range(100)
             ],
             "total_lines": 100,
-            "statistics": {
-                "level_distribution": {"INFO": 100}
-            }
+            "statistics": {"level_distribution": {"INFO": 100}},
         }
 
         # Test all export formats

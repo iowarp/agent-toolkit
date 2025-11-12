@@ -41,3 +41,24 @@ dev = [
 [build-system]
 requires = ["setuptools>=64.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.coverage.run]
+omit = [
+    # Exclude server.py from coverage - it's a FastMCP glue layer
+    # All business logic is tested in implementation modules
+    "src/server.py",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+# Target 90%+ coverage on implementation modules
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

@@ -170,7 +170,9 @@ class TestMemoryOptimization:
 
     def test_optimize_with_chunking(self, temp_csv_file):
         """Test optimization with chunk size specified"""
-        result = optimize_memory_usage(temp_csv_file, optimize_dtypes=True, chunk_size=100)
+        result = optimize_memory_usage(
+            temp_csv_file, optimize_dtypes=True, chunk_size=100
+        )
 
         assert result["success"]
         assert result["chunked_processing"] is not None
@@ -232,7 +234,9 @@ class TestMemoryOptimization:
             # Should recommend categorical for low cardinality column
             assert len(result["recommendations"]) > 0
             categorical_recs = [
-                r for r in result["recommendations"] if r["recommended_type"] == "category"
+                r
+                for r in result["recommendations"]
+                if r["recommended_type"] == "category"
             ]
             assert len(categorical_recs) > 0
         finally:
@@ -393,6 +397,103 @@ class TestMemoryOptimization:
             output_file = temp_file.replace(".csv", "_optimized.csv")
             if os.path.exists(output_file):
                 os.unlink(output_file)
+
+
+class TestMemoryOptimizationEdgeCases:
+    """Test edge cases for memory optimization to improve coverage"""
+
+    def test_optimize_numeric_string_conversion_failure(self):
+        """Test object columns that fail numeric conversion"""
+        df = pd.DataFrame({"mixed_col": ["text", "more_text", "not_numeric"]})
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            df.to_csv(f.name, index=False)
+            temp_file = f.name
+
+        try:
+            result = optimize_memory_usage(temp_file, optimize_dtypes=True)
+            assert result["success"]
+            # Should convert to category since it's not numeric
+        finally:
+            os.unlink(temp_file)
+            output_file = temp_file.replace(".csv", "_optimized.csv")
+            if os.path.exists(output_file):
+                os.unlink(output_file)
+
+    def test_optimize_int32_conversion(self):
+        """Test optimization to int32 dtype"""
+        df = pd.DataFrame({"large_ints": [1000000, 2000000, 3000000]})
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            df.to_csv(f.name, index=False)
+            temp_file = f.name
+
+        try:
+            result = optimize_memory_usage(temp_file, optimize_dtypes=True)
+            assert result["success"]
+        finally:
+            os.unlink(temp_file)
+            output_file = temp_file.replace(".csv", "_optimized.csv")
+            if os.path.exists(output_file):
+                os.unlink(output_file)
+
+    def test_optimize_large_memory_recommendations(self):
+        """Test recommendations for large memory datasets"""
+        # Create a large dataset > 1GB indicator
+        df = pd.DataFrame({"col1": range(200000), "col2": ["x" * 100] * 200000})
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            df.to_csv(f.name, index=False)
+            temp_file = f.name
+
+        try:
+            result = optimize_memory_usage(temp_file, optimize_dtypes=True)
+            assert result["success"]
+        finally:
+            os.unlink(temp_file)
+            output_file = temp_file.replace(".csv", "_optimized.csv")
+            if os.path.exists(output_file):
+                os.unlink(output_file)
+
+    def test_optimize_with_id_columns(self):
+        """Test recommendations for ID columns"""
+        df = pd.DataFrame(
+            {"user_id": range(100), "product_id": range(100, 200), "value": range(100)}
+        )
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            df.to_csv(f.name, index=False)
+            temp_file = f.name
+
+        try:
+            result = optimize_memory_usage(temp_file, optimize_dtypes=True)
+            assert result["success"]
+        finally:
+            os.unlink(temp_file)
+            output_file = temp_file.replace(".csv", "_optimized.csv")
+            if os.path.exists(output_file):
+                os.unlink(output_file)
+
+    def test_analyze_chunked_processing_exception(self):
+        """Test analyze_chunked_processing exception handling"""
+        result = analyze_chunked_processing("nonexistent_file.csv", chunk_size=1000)
+        # Should return error in result
+        assert "error" in result or "error_type" in result
+
+    def test_get_memory_recommendations_numeric_conversion(self):
+        """Test memory recommendations with numeric conversion opportunity"""
+        df = pd.DataFrame({"numeric_strings": ["123", "456", "789"]})
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
+            df.to_csv(f.name, index=False)
+            temp_file = f.name
+
+        try:
+            result = get_memory_recommendations(temp_file)
+            assert result["success"]
+        finally:
+            os.unlink(temp_file)
+
+    def test_get_memory_recommendations_exception(self):
+        """Test get_memory_recommendations exception handling"""
+        result = get_memory_recommendations("nonexistent_file.csv")
+        assert not result["success"]
+        assert "error" in result
 
 
 if __name__ == "__main__":

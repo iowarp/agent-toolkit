@@ -25,7 +25,18 @@ class TestHandleMissingData:
             {
                 "id": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                 "numeric_col": [10, np.nan, 30, 40, np.nan, 60, 70, 80, 90, 100],
-                "category_col": ["A", "B", np.nan, "A", "B", np.nan, "A", "B", "A", "B"],
+                "category_col": [
+                    "A",
+                    "B",
+                    np.nan,
+                    "A",
+                    "B",
+                    np.nan,
+                    "A",
+                    "B",
+                    "A",
+                    "B",
+                ],
                 "float_col": [1.1, 2.2, np.nan, 4.4, 5.5, np.nan, 7.7, 8.8, 9.9, 10.0],
             }
         )
@@ -219,7 +230,10 @@ class TestCleanData:
         assert result["success"]
         assert "cleaning_results" in result
         # Type changes may or may not occur depending on the data
-        if "type_changes" in result["cleaning_results"] and result["cleaning_results"]["type_changes"]:
+        if (
+            "type_changes" in result["cleaning_results"]
+            and result["cleaning_results"]["type_changes"]
+        ):
             # Check if any conversions happened
             assert isinstance(result["cleaning_results"]["type_changes"], dict)
 

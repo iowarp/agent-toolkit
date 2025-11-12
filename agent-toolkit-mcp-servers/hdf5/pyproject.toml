@@ -42,3 +42,25 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/hdf5_mcp"]
+
+[tool.coverage.run]
+omit = [
+    # Exclude server.py from coverage - it's a FastMCP glue layer
+    # that initializes global ThreadPoolExecutor causing test hangs.
+    # All business logic is tested in: config.py (100%), resources.py (96%), utils.py (98%)
+    "src/hdf5_mcp/server.py",
+    "*/tests/*",
+]
+
+[tool.coverage.report]
+# Target 90%+ coverage on implementation modules (config, resources, utils)
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

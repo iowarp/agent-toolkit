@@ -125,7 +125,10 @@ class TestDataValidation:
 
             assert result["success"]
             assert not result["validation_results"]["value"]["valid"]
-            assert any(v["rule"] == "allow_null" for v in result["validation_results"]["value"]["violations"])
+            assert any(
+                v["rule"] == "allow_null"
+                for v in result["validation_results"]["value"]["violations"]
+            )
         finally:
             os.unlink(temp_file)
 
@@ -159,7 +162,9 @@ class TestDataValidation:
     def test_validate_data_pattern_match(self, temp_file):
         """Test pattern matching"""
         # Email pattern
-        rules = {"email": {"pattern": r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"}}
+        rules = {
+            "email": {"pattern": r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"}
+        }
 
         result = validate_data(temp_file, rules)
 
@@ -235,7 +240,9 @@ class TestHypothesisTesting:
         return pd.DataFrame(
             {
                 "group": np.repeat(["A", "B"], 50),
-                "value1": np.concatenate([np.random.normal(10, 2, 50), np.random.normal(12, 2, 50)]),
+                "value1": np.concatenate(
+                    [np.random.normal(10, 2, 50), np.random.normal(12, 2, 50)]
+                ),
                 "value2": np.random.normal(50, 10, 100),
                 "category": np.random.choice(["X", "Y", "Z"], 100),
             }
@@ -265,7 +272,11 @@ class TestHypothesisTesting:
     def test_hypothesis_testing_two_sample_ttest(self, temp_file):
         """Test two-sample t-test"""
         result = hypothesis_testing(
-            temp_file, test_type="t_test", column1="value1", column2="value2", alpha=0.05
+            temp_file,
+            test_type="t_test",
+            column1="value1",
+            column2="value2",
+            alpha=0.05,
         )
 
         assert result["success"]
@@ -285,7 +296,11 @@ class TestHypothesisTesting:
     def test_hypothesis_testing_chi_square_independence(self, temp_file):
         """Test chi-square test of independence"""
         result = hypothesis_testing(
-            temp_file, test_type="chi_square", column1="group", column2="category", alpha=0.05
+            temp_file,
+            test_type="chi_square",
+            column1="group",
+            column2="category",
+            alpha=0.05,
         )
 
         assert result["success"]
@@ -295,7 +310,11 @@ class TestHypothesisTesting:
     def test_hypothesis_testing_correlation(self, temp_file):
         """Test Pearson correlation"""
         result = hypothesis_testing(
-            temp_file, test_type="correlation", column1="value1", column2="value2", alpha=0.05
+            temp_file,
+            test_type="correlation",
+            column1="value1",
+            column2="value2",
+            alpha=0.05,
         )
 
         assert result["success"]
@@ -350,18 +369,14 @@ class TestHypothesisTesting:
 
     def test_hypothesis_testing_anova_missing_grouping(self, temp_file):
         """Test ANOVA without grouping variable"""
-        result = hypothesis_testing(
-            temp_file, test_type="anova", column1="value1"
-        )
+        result = hypothesis_testing(temp_file, test_type="anova", column1="value1")
 
         assert not result["success"]
         assert "requires grouping variable" in result["error"]
 
     def test_hypothesis_testing_interpretation(self, temp_file):
         """Test that interpretation is included"""
-        result = hypothesis_testing(
-            temp_file, test_type="t_test", column1="value1"
-        )
+        result = hypothesis_testing(temp_file, test_type="t_test", column1="value1")
 
         assert result["success"]
         assert "conclusion" in result["results"]

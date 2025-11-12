@@ -47,3 +47,34 @@ async def test_compress_empty_file():
         os.unlink(result["_meta"]["compressed_file"])
     finally:
         os.unlink(f.name)
+
+
+# test compression with permission error
+@pytest.mark.asyncio
+async def test_compress_permission_error():
+    """Test that PermissionError is properly caught and raised"""
+    import unittest.mock as mock
+
+    with mock.patch("os.path.exists", return_value=True):
+        with mock.patch("os.path.getsize", return_value=100):
+            with mock.patch(
+                "builtins.open", side_effect=PermissionError("Permission denied")
+            ):
+                with pytest.raises(Exception) as exc_info:
+                    await compress_file("/some/file.txt")
+                assert "Permission denied" in str(exc_info.value)
+
+
+# test compression with generic exception
+@pytest.mark.asyncio
+async def test_compress_generic_exception():
+    """Test that generic exceptions are properly caught and raised"""
+    import unittest.mock as mock
+
+    with mock.patch("os.path.exists", return_value=True):
+        with mock.patch("os.path.getsize", side_effect=RuntimeError("Disk error")):
+            with pytest.raises(Exception) as exc_info:
+                await compress_file("/some/file.txt")
+            assert "Compression failed" in str(exc_info.value) or "Disk error" in str(
+                exc_info.value
+            )

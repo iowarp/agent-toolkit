@@ -164,7 +164,9 @@ class TestBeautifulFormatter:
         assert BeautifulFormatter._convert_numpy_types(np.int64(10)) == 10
 
         # Test float conversion
-        assert isinstance(BeautifulFormatter._convert_numpy_types(np.float64(10.5)), float)
+        assert isinstance(
+            BeautifulFormatter._convert_numpy_types(np.float64(10.5)), float
+        )
         assert BeautifulFormatter._convert_numpy_types(np.float64(10.5)) == 10.5
 
         # Test bool conversion
@@ -319,9 +321,7 @@ class TestBeautifulFormatter:
 
     def test_format_large_dataframe_preview(self):
         """Test that large DataFrames are limited in preview"""
-        large_df = pd.DataFrame(
-            {"col1": range(1000), "col2": range(1000, 2000)}
-        )
+        large_df = pd.DataFrame({"col1": range(1000), "col2": range(1000, 2000)})
 
         result = BeautifulFormatter._format_dataframe(large_df)
 
@@ -366,18 +366,14 @@ class TestBeautifulFormatter:
         operations = ["load_data", "process_file", "analyze_results"]
 
         for op in operations:
-            result = BeautifulFormatter.format_success_response(
-                operation=op, data={}
-            )
+            result = BeautifulFormatter.format_success_response(operation=op, data={})
             # Check that underscores are replaced with spaces and title case
             assert "_" not in result["🎯 Operation"]
             assert result["🎯 Operation"].istitle()
 
     def test_timestamp_format(self):
         """Test that timestamp is in correct format"""
-        result = BeautifulFormatter.format_success_response(
-            operation="test", data={}
-        )
+        result = BeautifulFormatter.format_success_response(operation="test", data={})
 
         timestamp = result["⏰ Timestamp"]
         # Try to parse it back

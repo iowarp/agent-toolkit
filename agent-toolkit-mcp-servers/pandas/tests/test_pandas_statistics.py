@@ -96,9 +96,18 @@ class TestGetStatisticalSummary:
         for col in ["age", "salary", "score"]:
             if col in result["additional_statistics"]:
                 assert "normality_test" in result["additional_statistics"][col]
-                assert "shapiro_wilk_statistic" in result["additional_statistics"][col]["normality_test"]
-                assert "shapiro_wilk_p_value" in result["additional_statistics"][col]["normality_test"]
-                assert "is_normal" in result["additional_statistics"][col]["normality_test"]
+                assert (
+                    "shapiro_wilk_statistic"
+                    in result["additional_statistics"][col]["normality_test"]
+                )
+                assert (
+                    "shapiro_wilk_p_value"
+                    in result["additional_statistics"][col]["normality_test"]
+                )
+                assert (
+                    "is_normal"
+                    in result["additional_statistics"][col]["normality_test"]
+                )
 
     def test_statistical_summary_coefficient_of_variation(self, temp_csv_file):
         """Test coefficient of variation calculation"""
@@ -125,7 +134,12 @@ class TestGetStatisticalSummary:
             assert result["success"]
             # Coefficient of variation should be None when mean is zero
             if data["values"].mean() == 0:
-                assert result["additional_statistics"]["values"]["coefficient_of_variation"] is None
+                assert (
+                    result["additional_statistics"]["values"][
+                        "coefficient_of_variation"
+                    ]
+                    is None
+                )
         finally:
             if os.path.exists(temp_file):
                 os.unlink(temp_file)
@@ -198,7 +212,10 @@ class TestGetStatisticalSummary:
             assert result["success"]
             # Should sample 5000 rows for normality test
             if "normality_test" in result["additional_statistics"]["large"]:
-                assert "shapiro_wilk_p_value" in result["additional_statistics"]["large"]["normality_test"]
+                assert (
+                    "shapiro_wilk_p_value"
+                    in result["additional_statistics"]["large"]["normality_test"]
+                )
         finally:
             if os.path.exists(temp_file):
                 os.unlink(temp_file)
@@ -311,7 +328,9 @@ class TestGetCorrelationAnalysis:
 
         assert result["success"]
         # Check for strong correlations (>0.8)
-        strong_corrs = [c for c in result["high_correlations"] if c["strength"] == "strong"]
+        strong_corrs = [
+            c for c in result["high_correlations"] if c["strength"] == "strong"
+        ]
         # x and y should have strong correlation
         assert len(strong_corrs) > 0
 

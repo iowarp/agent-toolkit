@@ -26,7 +26,14 @@ class TestGroupbyOperations:
         """Create sample data for grouping"""
         return pd.DataFrame(
             {
-                "department": ["Sales", "Sales", "Engineering", "Engineering", "HR", "HR"],
+                "department": [
+                    "Sales",
+                    "Sales",
+                    "Engineering",
+                    "Engineering",
+                    "HR",
+                    "HR",
+                ],
                 "employee": ["Alice", "Bob", "Charlie", "David", "Eve", "Frank"],
                 "salary": [50000, 60000, 80000, 90000, 55000, 58000],
                 "age": [25, 30, 35, 40, 28, 32],
@@ -283,7 +290,11 @@ class TestMergeDatasets:
 
         try:
             result = merge_datasets(
-                temp_left_file, temp_right, join_type="inner", left_on="id", right_on="emp_id"
+                temp_left_file,
+                temp_right,
+                join_type="inner",
+                left_on="id",
+                right_on="emp_id",
             )
 
             assert result["success"]
@@ -316,12 +327,19 @@ class TestMergeDatasets:
         result = merge_datasets(temp_left_file, temp_right_file, join_type="inner")
 
         assert not result["success"]
-        assert "Must specify either 'on' or both 'left_on' and 'right_on'" in result["error"]
+        assert (
+            "Must specify either 'on' or both 'left_on' and 'right_on'"
+            in result["error"]
+        )
 
     def test_merge_left_column_not_found(self, temp_left_file, temp_right_file):
         """Test merge with non-existent left column"""
         result = merge_datasets(
-            temp_left_file, temp_right_file, join_type="inner", left_on="nonexistent", right_on="id"
+            temp_left_file,
+            temp_right_file,
+            join_type="inner",
+            left_on="nonexistent",
+            right_on="id",
         )
 
         assert not result["success"]
@@ -330,7 +348,11 @@ class TestMergeDatasets:
     def test_merge_right_column_not_found(self, temp_left_file, temp_right_file):
         """Test merge with non-existent right column"""
         result = merge_datasets(
-            temp_left_file, temp_right_file, join_type="inner", left_on="id", right_on="nonexistent"
+            temp_left_file,
+            temp_right_file,
+            join_type="inner",
+            left_on="id",
+            right_on="nonexistent",
         )
 
         assert not result["success"]

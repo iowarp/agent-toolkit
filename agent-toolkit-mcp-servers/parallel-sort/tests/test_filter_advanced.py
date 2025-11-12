@@ -122,27 +122,53 @@ class TestAdvancedFilterOperations:
     def test_apply_operator_not_equals(self):
         """Test NOT_EQUALS operator."""
         assert apply_operator("ERROR", FilterOperator.NOT_EQUALS.value, "INFO") is True
-        assert apply_operator("ERROR", FilterOperator.NOT_EQUALS.value, "ERROR") is False
+        assert (
+            apply_operator("ERROR", FilterOperator.NOT_EQUALS.value, "ERROR") is False
+        )
 
     def test_apply_operator_contains(self):
         """Test CONTAINS operator."""
-        assert apply_operator("test message", FilterOperator.CONTAINS.value, "test") is True
-        assert apply_operator("test message", FilterOperator.CONTAINS.value, "missing") is False
+        assert (
+            apply_operator("test message", FilterOperator.CONTAINS.value, "test")
+            is True
+        )
+        assert (
+            apply_operator("test message", FilterOperator.CONTAINS.value, "missing")
+            is False
+        )
 
     def test_apply_operator_not_contains(self):
         """Test NOT_CONTAINS operator."""
-        assert apply_operator("test message", FilterOperator.NOT_CONTAINS.value, "missing") is True
-        assert apply_operator("test message", FilterOperator.NOT_CONTAINS.value, "test") is False
+        assert (
+            apply_operator("test message", FilterOperator.NOT_CONTAINS.value, "missing")
+            is True
+        )
+        assert (
+            apply_operator("test message", FilterOperator.NOT_CONTAINS.value, "test")
+            is False
+        )
 
     def test_apply_operator_starts_with(self):
         """Test STARTS_WITH operator."""
-        assert apply_operator("test message", FilterOperator.STARTS_WITH.value, "test") is True
-        assert apply_operator("test message", FilterOperator.STARTS_WITH.value, "message") is False
+        assert (
+            apply_operator("test message", FilterOperator.STARTS_WITH.value, "test")
+            is True
+        )
+        assert (
+            apply_operator("test message", FilterOperator.STARTS_WITH.value, "message")
+            is False
+        )
 
     def test_apply_operator_ends_with(self):
         """Test ENDS_WITH operator."""
-        assert apply_operator("test message", FilterOperator.ENDS_WITH.value, "message") is True
-        assert apply_operator("test message", FilterOperator.ENDS_WITH.value, "test") is False
+        assert (
+            apply_operator("test message", FilterOperator.ENDS_WITH.value, "message")
+            is True
+        )
+        assert (
+            apply_operator("test message", FilterOperator.ENDS_WITH.value, "test")
+            is False
+        )
 
     def test_apply_operator_regex(self):
         """Test REGEX operator."""
@@ -175,8 +201,12 @@ class TestAdvancedFilterOperations:
 
     def test_apply_operator_in(self):
         """Test IN operator."""
-        assert apply_operator("ERROR", FilterOperator.IN.value, ["ERROR", "WARN"]) is True
-        assert apply_operator("INFO", FilterOperator.IN.value, ["ERROR", "WARN"]) is False
+        assert (
+            apply_operator("ERROR", FilterOperator.IN.value, ["ERROR", "WARN"]) is True
+        )
+        assert (
+            apply_operator("INFO", FilterOperator.IN.value, ["ERROR", "WARN"]) is False
+        )
 
     def test_apply_operator_in_invalid(self):
         """Test IN operator with non-list value."""
@@ -184,12 +214,20 @@ class TestAdvancedFilterOperations:
 
     def test_apply_operator_not_in(self):
         """Test NOT_IN operator."""
-        assert apply_operator("INFO", FilterOperator.NOT_IN.value, ["ERROR", "WARN"]) is True
-        assert apply_operator("ERROR", FilterOperator.NOT_IN.value, ["ERROR", "WARN"]) is False
+        assert (
+            apply_operator("INFO", FilterOperator.NOT_IN.value, ["ERROR", "WARN"])
+            is True
+        )
+        assert (
+            apply_operator("ERROR", FilterOperator.NOT_IN.value, ["ERROR", "WARN"])
+            is False
+        )
 
     def test_apply_operator_not_in_invalid(self):
         """Test NOT_IN operator with non-list value."""
-        assert apply_operator("ERROR", FilterOperator.NOT_IN.value, "not a list") is True
+        assert (
+            apply_operator("ERROR", FilterOperator.NOT_IN.value, "not a list") is True
+        )
 
     def test_apply_operator_none_value(self):
         """Test operator with None field value."""

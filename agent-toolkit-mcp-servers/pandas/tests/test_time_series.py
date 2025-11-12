@@ -137,9 +137,7 @@ class TestTimeSeriesOperations:
 
     def test_invalid_datetime_conversion(self):
         """Test with non-datetime column"""
-        df = pd.DataFrame(
-            {"date": ["not", "a", "date"], "value": [1, 2, 3]}
-        )
+        df = pd.DataFrame({"date": ["not", "a", "date"], "value": [1, 2, 3]})
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".csv", delete=False) as f:
             df.to_csv(f.name, index=False)

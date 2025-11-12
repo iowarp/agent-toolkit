@@ -60,24 +60,34 @@ class TestFilterData:
         result = filter_data(temp_csv_file, {"age": {"min_value": 30}})
 
         assert result["success"]
-        assert result["filter_stats"]["final_shape"][0] <= result["filter_stats"]["original_shape"][0]
+        assert (
+            result["filter_stats"]["final_shape"][0]
+            <= result["filter_stats"]["original_shape"][0]
+        )
 
     def test_filter_max_value(self, temp_csv_file):
         """Test maximum value filter"""
         result = filter_data(temp_csv_file, {"age": {"max_value": 50}})
 
         assert result["success"]
-        assert result["filter_stats"]["final_shape"][0] <= result["filter_stats"]["original_shape"][0]
+        assert (
+            result["filter_stats"]["final_shape"][0]
+            <= result["filter_stats"]["original_shape"][0]
+        )
 
     def test_filter_operator_eq(self, temp_csv_file):
         """Test equality operator filter"""
-        result = filter_data(temp_csv_file, {"department": {"operator": "eq", "value": "Sales"}})
+        result = filter_data(
+            temp_csv_file, {"department": {"operator": "eq", "value": "Sales"}}
+        )
 
         assert result["success"]
 
     def test_filter_operator_ne(self, temp_csv_file):
         """Test not equal operator filter"""
-        result = filter_data(temp_csv_file, {"department": {"operator": "ne", "value": "Sales"}})
+        result = filter_data(
+            temp_csv_file, {"department": {"operator": "ne", "value": "Sales"}}
+        )
 
         assert result["success"]
 
@@ -237,21 +247,27 @@ class TestFilterData:
 
     def test_filter_column_not_found(self, temp_csv_file):
         """Test filtering with non-existent column"""
-        result = filter_data(temp_csv_file, {"nonexistent": {"operator": "eq", "value": 10}})
+        result = filter_data(
+            temp_csv_file, {"nonexistent": {"operator": "eq", "value": 10}}
+        )
 
         assert not result["success"]
         assert result["error_type"] == "ValueError"
 
     def test_filter_unknown_operator(self, temp_csv_file):
         """Test filtering with unknown operator"""
-        result = filter_data(temp_csv_file, {"age": {"operator": "unknown", "value": 30}})
+        result = filter_data(
+            temp_csv_file, {"age": {"operator": "unknown", "value": 30}}
+        )
 
         assert not result["success"]
         assert "Unknown operator" in result["error"]
 
     def test_filter_file_not_found(self):
         """Test filtering non-existent file"""
-        result = filter_data("nonexistent.csv", {"age": {"operator": "gt", "value": 30}})
+        result = filter_data(
+            "nonexistent.csv", {"age": {"operator": "gt", "value": 30}}
+        )
 
         assert not result["success"]
         assert result["error_type"] == "FileNotFoundError"
