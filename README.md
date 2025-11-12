@@ -1,11 +1,11 @@
 # Agent Toolkit
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![PyPI version](https://img.shields.io/pypi/v/agent-toolkit.svg)](https://pypi.org/project/agent-toolkit/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
-[![FastMCP](https://img.shields.io/badge/FastMCP-2.12-purple)](https://gofastmcp.com)
+[![FastMCP](https://img.shields.io/badge/FastMCP-2.13-purple)](https://gofastmcp.com)
 [![CI](https://github.com/iowarp/agent-toolkit/actions/workflows/quality_control.yml/badge.svg)](https://github.com/iowarp/agent-toolkit/actions/workflows/quality_control.yml)
-[![Coverage](https://codecov.io/gh/iowarp/agent-toolkit/branch/main/graph/badge.svg)](https://codecov.io/gh/iowarp/agent-toolkit)
+[![Coverage](https://codecov.io/gh/iowarp/agent-toolkit/branch/main/graph/badge.svg?token=YOUR_TOKEN_HERE)](https://codecov.io/gh/iowarp/agent-toolkit)
 
 [![Tests](https://img.shields.io/badge/Tests-15%20MCP%20Packages-blue)](https://github.com/iowarp/agent-toolkit/actions/workflows/test-mcps.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
@@ -14,7 +14,11 @@
 
 **Agent Toolkit** - Part of the IoWarp platform's tooling layer for AI agents. A comprehensive collection of tools, skills, plugins, and extensions. Currently featuring 15+ Model Context Protocol (MCP) servers for scientific computing, with plans to expand to additional agent capabilities. Enables AI agents to interact with HPC resources, scientific data formats, and research datasets.
 
-**Website**: [https://iowarp.github.io/agent-toolkit/](https://iowarp.github.io/agent-toolkit/) | **Chat**: [Zulip Community](https://iowarp.zulipchat.com/#narrow/channel/543872-Agent-Toolkit) | Developed by <img src="https://grc.iit.edu/img/logo.png" alt="GRC Logo" width="18" height="18"> **[Gnosis Research Center (GRC)](https://grc.iit.edu/)**
+**Website**: [https://iowarp.github.io/agent-toolkit/](https://iowarp.github.io/agent-toolkit/)
+**IOWarp**: [https://iowarp.ai](https://iowarp.ai)
+**Chat**: [Zulip Community](https://iowarp.zulipchat.com/#narrow/channel/543872-Agent-Toolkit)
+**Join Us**: [Invitation Link](https://iowarp.zulipchat.com/join/e4wh24du356e4y2iw6x6jeay/)
+**Developed by**: <img src="https://grc.iit.edu/img/logo.png" alt="GRC Logo" width="18" height="18"> **[Gnosis Research Center](https://grc.iit.edu/)**
 
 ---
 

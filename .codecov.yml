@@ -1,0 +1,90 @@
+# Codecov configuration for Agent Toolkit monorepo
+# Handles coverage from multiple independent MCP server packages
+
+coverage:
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 0%
+        base: auto
+        flags:
+          - adios
+          - arxiv
+          - compression
+          - darshan
+          - hdf5
+          - jarvis
+          - lmod
+          - ndp
+          - node-hardware
+          - pandas
+          - parallel-sort
+          - parquet
+          - plot
+          - slurm
+    patch:
+      default:
+        target: auto
+        threshold: 0%
+
+# Flag configuration for each MCP server
+flags:
+  adios:
+    paths:
+      - agent-toolkit-mcp-servers/adios/
+  arxiv:
+    paths:
+      - agent-toolkit-mcp-servers/arxiv/
+  compression:
+    paths:
+      - agent-toolkit-mcp-servers/compression/
+  darshan:
+    paths:
+      - agent-toolkit-mcp-servers/darshan/
+  hdf5:
+    paths:
+      - agent-toolkit-mcp-servers/hdf5/
+  jarvis:
+    paths:
+      - agent-toolkit-mcp-servers/jarvis/
+  lmod:
+    paths:
+      - agent-toolkit-mcp-servers/lmod/
+  ndp:
+    paths:
+      - agent-toolkit-mcp-servers/ndp/
+  node-hardware:
+    paths:
+      - agent-toolkit-mcp-servers/node-hardware/
+  pandas:
+    paths:
+      - agent-toolkit-mcp-servers/pandas/
+  parallel-sort:
+    paths:
+      - agent-toolkit-mcp-servers/parallel-sort/
+  parquet:
+    paths:
+      - agent-toolkit-mcp-servers/parquet/
+  plot:
+    paths:
+      - agent-toolkit-mcp-servers/plot/
+  slurm:
+    paths:
+      - agent-toolkit-mcp-servers/slurm/
+
+# Comment configuration
+comment:
+  layout: "reach,diff,flags,tree"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+
+# Ignore patterns
+ignore:
+  - "**/__pycache__"
+  - "**/tests/"
+  - "**/.venv"
+  - "**/htmlcov"
+  - "agent-toolkit-website/"

@@ -8,7 +8,7 @@ version = "0.4.0"
 description = "Agent Toolkit - MCP Servers, Clients, and Tools for AI Agents"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "MIT"}
+license = {text = "BSD-3-Clause"}
 authors = [
     {name = "IoWarp Team - Gnosis Research Center", email = "grc@illinoistech.edu"}
 ]

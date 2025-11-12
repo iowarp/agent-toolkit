@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "National Data Platform (NDP) MCP server for searching and discovering datasets across multiple CKAN instances"
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT"
+license = "BSD-3-Clause"
 authors = [
     { name = "IoWarp Team - Gnosis Research Center", email = "grc@illinoistech.edu" }
 ]

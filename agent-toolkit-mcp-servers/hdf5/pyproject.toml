@@ -4,7 +4,7 @@ version = "2.1.0"
 description = "HDF5 FastMCP - Scientific Data Access for AI Agents | Agent Toolkit MCP Server"
 readme = "README.md"
 requires-python = ">=3.10"
-license = "MIT"
+license = "BSD-3-Clause"
 authors = [
     { name = "IoWarp Team - Gnosis Research Center", email = "grc@illinoistech.edu" }
 ]
