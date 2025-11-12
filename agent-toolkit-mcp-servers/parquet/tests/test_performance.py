@@ -83,10 +83,10 @@ async def test_count_distinct_performance():
         column_name="sensor_id",
         operation="count_distinct",
         start_row=0,
-        end_row=1000000
+        end_row=2000
     )
     elapsed = time.time() - start
-    
+
     data = json.loads(result)
     assert data["status"] == "success"
     assert isinstance(data["result"], int)

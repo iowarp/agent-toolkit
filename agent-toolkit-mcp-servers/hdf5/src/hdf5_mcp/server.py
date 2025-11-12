@@ -489,7 +489,9 @@ async def read_full_dataset(path: str) -> str:
 )
 @with_error_handling
 @with_performance_tracking
-async def read_partial_dataset(path: str, start: str = None, count: str = None) -> str:
+async def read_partial_dataset(
+    path: str, start: Optional[str] = None, count: Optional[str] = None
+) -> str:
     """Read a portion of a dataset with slicing.
 
     Args:
@@ -790,7 +792,7 @@ async def list_attributes(path: str) -> str:
 @with_error_handling
 @with_performance_tracking
 async def hdf5_parallel_scan(
-    directory: str, pattern: str = "*.h5", ctx: Context = None
+    directory: str, pattern: str = "*.h5", ctx: Optional[Context] = None
 ) -> str:
     """Fast multi-file scanning with parallel processing.
 
@@ -874,7 +876,7 @@ async def hdf5_parallel_scan(
 @with_error_handling
 @with_performance_tracking
 async def hdf5_batch_read(
-    paths: str, slice_spec: Optional[str] = None, ctx: Context = None
+    paths: str, slice_spec: Optional[str] = None, ctx: Optional[Context] = None
 ) -> str:
     """Read multiple datasets in parallel.
 
@@ -961,7 +963,7 @@ async def hdf5_batch_read(
 @with_error_handling
 @with_performance_tracking
 async def hdf5_stream_data(
-    path: str, chunk_size: int = 1024, max_chunks: int = 100, ctx: Context = None
+    path: str, chunk_size: int = 1024, max_chunks: int = 100, ctx: Optional[Context] = None
 ) -> str:
     """Stream large datasets efficiently with memory management.
 
@@ -1064,7 +1066,7 @@ async def hdf5_stream_data(
 @with_error_handling
 @with_performance_tracking
 async def hdf5_aggregate_stats(
-    paths: str, stats: Optional[str] = None, ctx: Context = None
+    paths: str, stats: Optional[str] = None, ctx: Optional[Context] = None
 ) -> str:
     """Parallel statistics computation across multiple datasets.
 
@@ -1187,7 +1189,7 @@ async def hdf5_aggregate_stats(
 )
 @with_error_handling
 @with_performance_tracking
-async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str:
+async def analyze_dataset_structure(path: str = "/", ctx: Optional[Context] = None) -> str:
     """Analyze and understand file organization and data patterns with AI insights.
 
     Args:
@@ -1241,7 +1243,7 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
                     f"Dataset info: {', '.join(dataset_info[:5])}. "
                     f"What patterns do you observe and what might this data be used for?"
                 )
-                analysis += f"\n\n🤖 AI Insights:\n{llm_response.text}\n"
+                analysis += f"\n\n🤖 AI Insights:\n{llm_response.text}\n" # type: ignore[union-attr]
             except ValueError as e:
                 # Client doesn't support sampling
                 logger.debug(f"Sampling not supported: {e}")
@@ -1276,7 +1278,7 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
                     f"Shape {obj.shape}, dtype {obj.dtype}, size {obj.nbytes / (1024 * 1024):.2f} MB. "
                     f"What might this data represent?"
                 )
-                analysis += f"\n\n🤖 AI Insights:\n{llm_response.text}\n"
+                analysis += f"\n\n🤖 AI Insights:\n{llm_response.text}\n" # type: ignore[union-attr]
             except ValueError as e:
                 logger.debug(f"Sampling not supported: {e}")
             except Exception as e:
@@ -1304,7 +1306,7 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
 @with_error_handling
 @with_performance_tracking
 async def find_similar_datasets(
-    reference_path: str, similarity_threshold: float = 0.8, ctx: Context = None
+    reference_path: str, similarity_threshold: float = 0.8, ctx: Optional[Context] = None
 ) -> str:
     """Find datasets with similar characteristics to a reference dataset with AI analysis.
 
@@ -1353,7 +1355,7 @@ async def find_similar_datasets(
                 )
 
     actual_file = current_file.file if hasattr(current_file, "file") else current_file
-    actual_file.visititems(check_dataset)
+    actual_file.visititems(check_dataset) # type: ignore[union-attr]
 
     similar_datasets.sort(key=lambda x: x["similarity"], reverse=True)
 
@@ -1384,7 +1386,7 @@ async def find_similar_datasets(
                     f"{similar_paths}. "
                     f"What might these similar datasets represent?"
                 )
-                result += f"\n\n🤖 AI Analysis:\n{llm_response.text}\n"
+                result += f"\n\n🤖 AI Analysis:\n{llm_response.text}\n" # type: ignore[union-attr]
             except ValueError as e:
                 logger.debug(f"Sampling not supported: {e}")
             except Exception as e:
@@ -1410,7 +1412,7 @@ async def find_similar_datasets(
 )
 @with_error_handling
 @with_performance_tracking
-async def suggest_next_exploration(current_path: str = "/", ctx: Context = None) -> str:
+async def suggest_next_exploration(current_path: str = "/", ctx: Optional[Context] = None) -> str:
     """Suggest interesting data to explore next based on current location with AI recommendations.
 
     Args:
@@ -1481,7 +1483,7 @@ async def suggest_next_exploration(current_path: str = "/", ctx: Context = None)
             except Exception:
                 continue
 
-    suggestions.sort(key=lambda x: x["score"], reverse=True)
+    suggestions.sort(key=lambda x: x["score"], reverse=True) # type: ignore[arg-type, return-value]
 
     result = f"Exploration suggestions from '{current_path}':\n\n"
     if suggestions:
@@ -1502,7 +1504,7 @@ async def suggest_next_exploration(current_path: str = "/", ctx: Context = None)
                     f"{suggestion_list}, "
                     f"what would you recommend exploring first and why?"
                 )
-                result += f"\n🤖 AI Recommendations:\n{llm_response.text}\n"
+                result += f"\n🤖 AI Recommendations:\n{llm_response.text}\n" # type: ignore[union-attr]
             except ValueError as e:
                 logger.debug(f"Sampling not supported: {e}")
             except Exception as e:
@@ -1529,7 +1531,7 @@ async def suggest_next_exploration(current_path: str = "/", ctx: Context = None)
 @with_error_handling
 @with_performance_tracking
 async def identify_io_bottlenecks(
-    analysis_paths: Optional[List[str]] = None, ctx: Context = None
+    analysis_paths: Optional[List[str]] = None, ctx: Optional[Context] = None
 ) -> str:
     """Identify potential I/O bottlenecks and performance issues with AI recommendations.
 
@@ -1553,7 +1555,7 @@ async def identify_io_bottlenecks(
         actual_file = (
             current_file.file if hasattr(current_file, "file") else current_file
         )
-        actual_file.visititems(collect_datasets)
+        actual_file.visititems(collect_datasets) # type: ignore[union-attr]
         analysis_paths = analysis_paths[:10]
 
     bottlenecks = []
@@ -1605,7 +1607,7 @@ async def identify_io_bottlenecks(
                     f"What specific optimization strategies would you recommend to address these issues?"
                 )
                 result += (
-                    f"\n🤖 AI Optimization Recommendations:\n{llm_response.text}\n"
+                    f"\n🤖 AI Optimization Recommendations:\n{llm_response.text}\n" # type: ignore[union-attr]
                 )
             except ValueError as e:
                 logger.debug(f"Sampling not supported: {e}")
@@ -1720,7 +1722,7 @@ async def optimize_access_pattern(
         "openWorldHint": False,
     },
 )
-async def refresh_hdf5_resources(ctx: Context = None) -> str:
+async def refresh_hdf5_resources(ctx: Optional[Context] = None) -> str:
     """Re-scan client roots and update available HDF5 resources.
 
     FastMCP automatically sends notifications/resources/list_changed to clients.
@@ -1795,7 +1797,7 @@ async def list_available_hdf5_files() -> str:
 @with_error_handling
 @with_performance_tracking
 async def export_dataset(
-    path: str, output_path: Optional[str] = None, ctx: Context = None
+    path: str, output_path: Optional[str] = None, ctx: Optional[Context] = None
 ) -> str:
     """Export dataset to various formats with user format selection.
 
@@ -1824,11 +1826,11 @@ async def export_dataset(
         try:
             format_result = await ctx.elicit(
                 "What format should I export to?",
-                response_type=["csv", "json", "numpy"],
+                response_type=["csv", "json", "numpy"], # type: ignore[arg-type]
             )
 
             if format_result.action == "accept":
-                export_format = format_result.data
+                export_format = format_result.data # type: ignore[assignment]
             elif format_result.action == "decline":
                 return "Export declined by user"
             else:  # cancel

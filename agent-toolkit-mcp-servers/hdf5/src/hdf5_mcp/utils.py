@@ -79,7 +79,7 @@ class PerformanceMonitor:
     def __init__(self, metrics_dir: Optional[Path] = None):
         self.metrics_dir = metrics_dir or Path.home() / ".hdf5_mcp" / "metrics"
         self.metrics_dir.mkdir(parents=True, exist_ok=True)
-        self.metrics: Dict[str, Dict[str, Any]] = {
+        self.metrics: Dict[str, Any] = {  # type: ignore[assignment]
             "operations": {},
             "memory": [],
             "cache_stats": {"hits": 0, "misses": 0},
@@ -153,7 +153,7 @@ class PerformanceMonitor:
             )
 
             if self.metrics["memory"]:
-                current_memory = self.metrics["memory"][-1]["rss"] / (1024 * 1024)  # MB
+                current_memory = self.metrics["memory"][-1]["rss"] / (1024 * 1024)  # type: ignore[index]  # MB
             else:
                 current_memory = 0
 
@@ -366,14 +366,14 @@ class HDF5Manager:
     @monitor_performance(PerformanceMonitor())
     def read_dataset(self, dataset_path: str, **kwargs) -> Any:
         """Read a dataset with performance monitoring."""
-        return self.file[dataset_path][()]
+        return self.file[dataset_path][()]  # type: ignore[index]
 
     @monitor_performance(PerformanceMonitor())
     def write_dataset(self, dataset_path: str, data: Any, **kwargs):
         """Write a dataset with performance monitoring."""
-        if dataset_path in self.file:
-            del self.file[dataset_path]
-        self.file.create_dataset(dataset_path, data=data, **kwargs)
+        if dataset_path in self.file:  # type: ignore[operator]
+            del self.file[dataset_path]  # type: ignore[attr-defined]
+        self.file.create_dataset(dataset_path, data=data, **kwargs)  # type: ignore[attr-defined]
 
     def get_performance_summary(self) -> Dict[str, Any]:
         """Get a summary of performance metrics."""

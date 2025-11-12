@@ -72,7 +72,7 @@ class LRUCache:
     """LRU Cache implementation for HDF5 datasets."""
 
     def __init__(self, capacity: int = 1000):
-        self.cache = OrderedDict()
+        self.cache: OrderedDict[str, Any] = OrderedDict()
         self.capacity = capacity
         self.lock = Lock()
 
@@ -197,7 +197,7 @@ class LazyDatasetProxy:
 class ResourceManager:
     """Manages resources for the HDF5 MCP server."""
 
-    def __init__(self, data_dir: Path = None, cache_capacity: int = 1000):
+    def __init__(self, data_dir: Optional[Path] = None, cache_capacity: int = 1000):
         """
         Initialize resource manager.
 
@@ -241,7 +241,7 @@ class ResourceManager:
         self.dataset_cache = LRUCache(cache_capacity)
 
         # Weak references to open file handles
-        self.file_handles = weakref.WeakValueDictionary()
+        self.file_handles: Any = weakref.WeakValueDictionary()
 
         # Lock for thread safety
         self.lock = Lock()
