@@ -11,7 +11,6 @@ from parquet_mcp.capabilities.parquet_handler import (
 @pytest.mark.asyncio
 async def test_read_slice_multiple_columns(test_parquet_file):
     """Test read_slice with multiple column selection."""
-    from parquet_mcp.capabilities.parquet_handler import summarize
 
     # Get schema
     summary_result = await summarize(test_parquet_file)
@@ -44,7 +43,6 @@ async def test_read_slice_multiple_columns(test_parquet_file):
 @pytest.mark.asyncio
 async def test_read_slice_column_order_preserved(test_parquet_file):
     """Test that column order in request is preserved in response."""
-    from parquet_mcp.capabilities.parquet_handler import summarize
 
     # Get schema
     summary_result = await summarize(test_parquet_file)
@@ -72,7 +70,6 @@ async def test_read_slice_column_order_preserved(test_parquet_file):
 @pytest.mark.asyncio
 async def test_read_slice_single_column(test_parquet_file):
     """Test read_slice with single column selection."""
-    from parquet_mcp.capabilities.parquet_handler import summarize
 
     # Get schema
     summary_result = await summarize(test_parquet_file)
@@ -113,7 +110,6 @@ async def test_read_slice_empty_column_list(test_parquet_file):
 @pytest.mark.asyncio
 async def test_read_slice_duplicate_columns(test_parquet_file):
     """Test read_slice with duplicate column names."""
-    from parquet_mcp.capabilities.parquet_handler import summarize
 
     # Get schema
     summary_result = await summarize(test_parquet_file)
@@ -137,7 +133,6 @@ async def test_read_slice_duplicate_columns(test_parquet_file):
 @pytest.mark.asyncio
 async def test_read_slice_case_sensitivity_columns(test_parquet_file):
     """Test if column names are case-sensitive."""
-    from parquet_mcp.capabilities.parquet_handler import summarize
 
     # Get schema
     summary_result = await summarize(test_parquet_file)
@@ -166,7 +161,6 @@ async def test_read_slice_case_sensitivity_columns(test_parquet_file):
 @pytest.mark.asyncio
 async def test_read_slice_special_characters_in_columns(test_parquet_file):
     """Test handling of columns with special characters."""
-    from parquet_mcp.capabilities.parquet_handler import summarize
 
     # Get schema
     summary_result = await summarize(test_parquet_file)
@@ -192,7 +186,6 @@ async def test_read_slice_special_characters_in_columns(test_parquet_file):
 @pytest.mark.asyncio
 async def test_read_slice_all_columns_explicitly(test_parquet_file):
     """Test reading with explicit list of all columns."""
-    from parquet_mcp.capabilities.parquet_handler import summarize
 
     # Get schema
     summary_result = await summarize(test_parquet_file)
@@ -216,7 +209,6 @@ async def test_read_slice_all_columns_explicitly(test_parquet_file):
 @pytest.mark.asyncio
 async def test_read_slice_column_subset_data_integrity(test_parquet_file):
     """Test that column subset reads preserve data integrity."""
-    from parquet_mcp.capabilities.parquet_handler import summarize
 
     # Get schema
     summary_result = await summarize(test_parquet_file)

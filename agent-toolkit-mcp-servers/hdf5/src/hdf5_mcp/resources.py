@@ -67,14 +67,15 @@ logger = logging.getLogger(__name__)
 # Cache Implementation
 # =========================================================================
 
+
 class LRUCache:
     """LRU Cache implementation for HDF5 datasets."""
-    
+
     def __init__(self, capacity: int = 1000):
         self.cache = OrderedDict()
         self.capacity = capacity
         self.lock = Lock()
-        
+
     def get(self, key: str) -> Optional[Any]:
         """Get item from cache with thread safety."""
         with self.lock:
@@ -82,7 +83,7 @@ class LRUCache:
                 return None
             self.cache.move_to_end(key)
             return self.cache[key]
-            
+
     def put(self, key: str, value: Any) -> None:
         """Put item in cache with thread safety."""
         with self.lock:
@@ -92,20 +93,22 @@ class LRUCache:
             if len(self.cache) > self.capacity:
                 self.cache.popitem(last=False)
 
+
 # =========================================================================
 # Lazy Loading Implementation
 # =========================================================================
 
+
 class LazyHDF5Proxy:
     """Proxy object for lazy loading of HDF5 files."""
-    
-    def __init__(self, file_path: Path, resource_manager: 'ResourceManager'):
+
+    def __init__(self, file_path: Path, resource_manager: "ResourceManager"):
         self._file_path = file_path
         self._resource_manager = resource_manager
         self._file: Optional[h5py.File] = None
         self._last_access = 0.0
         self._lock = Lock()
-        
+
     @property
     def file(self) -> h5py.File:
         """Get the HDF5 file handle, loading it if necessary."""
@@ -113,13 +116,13 @@ class LazyHDF5Proxy:
             current_time = time.time()
             if self._file is None:
                 try:
-                    self._file = h5py.File(self._file_path, 'r')
+                    self._file = h5py.File(self._file_path, "r")
                 except Exception as e:
                     logger.error(f"Error opening HDF5 file {self._file_path}: {e}")
                     return None
             self._last_access = current_time
             return self._file
-    
+
     @property
     def filename(self) -> str:
         """Get the filename of the HDF5 file."""
@@ -130,7 +133,7 @@ class LazyHDF5Proxy:
         """Get the file access mode."""
         if self.file is not None:
             return self.file.mode
-        return 'r'
+        return "r"
 
     @property
     def attrs(self):
@@ -138,30 +141,31 @@ class LazyHDF5Proxy:
         if self.file is not None:
             return self.file.attrs
         return None
-            
+
     def __getitem__(self, key: str) -> Any:
         """Access items in the HDF5 file."""
         return self.file[key]
-        
+
     def __contains__(self, key: str) -> bool:
         """Check if key exists in the HDF5 file."""
         return key in self.file
-        
+
     def close(self):
         """Close the file handle if it's open."""
         with self._lock:
             if self._file is not None:
                 self._file = None
 
+
 class LazyDatasetProxy:
     """Proxy object for lazy loading of HDF5 datasets."""
-    
+
     def __init__(self, file_proxy: LazyHDF5Proxy, dataset_path: str):
         self._file_proxy = file_proxy
         self._dataset_path = dataset_path
         self._dataset: Optional[h5py.Dataset] = None
         self._lock = Lock()
-        
+
     @property
     def dataset(self) -> h5py.Dataset:
         """Get the dataset, loading it if necessary."""
@@ -169,32 +173,34 @@ class LazyDatasetProxy:
             if self._dataset is None:
                 self._dataset = self._file_proxy.file[self._dataset_path]
             return self._dataset
-            
+
     @property
     def shape(self) -> tuple:
         """Get dataset shape."""
         return self.dataset.shape
-        
+
     @property
     def dtype(self) -> np.dtype:
         """Get dataset dtype."""
         return self.dataset.dtype
-        
+
     def __getitem__(self, key) -> np.ndarray:
         """Get data from the dataset."""
         return self.dataset[key]
+
 
 # =========================================================================
 # Resource Management
 # =========================================================================
 
+
 class ResourceManager:
     """Manages resources for the HDF5 MCP server."""
-    
+
     def __init__(self, data_dir: Path = None, cache_capacity: int = 1000):
         """
         Initialize resource manager.
-        
+
         Args:
             data_dir: Directory to store metadata
             cache_capacity: Maximum number of datasets to cache
@@ -227,19 +233,19 @@ class ResourceManager:
         self._lock = asyncio.Lock()
 
         logger.info("Resource manager initialized")
-        
+
         # Storage for tracking opened HDF5 files
         self.hdf5_files: Dict[str, LazyHDF5Proxy] = {}
-        
+
         # LRU cache for frequently accessed datasets
         self.dataset_cache = LRUCache(cache_capacity)
-        
+
         # Weak references to open file handles
         self.file_handles = weakref.WeakValueDictionary()
-        
+
         # Lock for thread safety
         self.lock = Lock()
-    
+
     def _load_storage_index(self) -> Dict[str, Any]:
         """Load the storage index from disk."""
         if self.storage_index_path.exists():
@@ -248,13 +254,10 @@ class ResourceManager:
                     return json.load(f)
             except Exception as e:
                 logger.error(f"Error loading storage index: {e}")
-        
+
         # Initialize empty storage index
-        return {
-            "files": {},
-            "last_updated": datetime.now().isoformat()
-        }
-    
+        return {"files": {}, "last_updated": datetime.now().isoformat()}
+
     def _save_storage_index(self):
         """Save the storage index to disk."""
         try:
@@ -263,7 +266,7 @@ class ResourceManager:
                 json.dump(self.storage_index, f, indent=2)
         except Exception as e:
             logger.error(f"Error saving storage index: {e}")
-    
+
     def _load_cache_db(self) -> Dict[str, Any]:
         """Load the cache database from disk."""
         if self.cache_db_path.exists():
@@ -272,14 +275,14 @@ class ResourceManager:
                     return json.load(f)
             except Exception as e:
                 logger.error(f"Error loading cache database: {e}")
-        
+
         # Initialize empty cache database
         return {
             "datasets": {},
             "attributes": {},
-            "last_updated": datetime.now().isoformat()
+            "last_updated": datetime.now().isoformat(),
         }
-    
+
     def _save_cache_db(self):
         """Save the cache database to disk."""
         try:
@@ -288,7 +291,7 @@ class ResourceManager:
                 json.dump(self.cache_db, f, indent=2)
         except Exception as e:
             logger.error(f"Error saving cache database: {e}")
-    
+
     def _load_history_db(self) -> Dict[str, Any]:
         """Load the history database from disk."""
         if self.history_db_path.exists():
@@ -297,15 +300,10 @@ class ResourceManager:
                     return json.load(f)
             except Exception as e:
                 logger.error(f"Error loading history database: {e}")
-        
+
         # Initialize empty history database
-        return {
-            "sessions": [],
-            "tool_calls": [],
-            "requests": [],
-            "errors": []
-        }
-    
+        return {"sessions": [], "tool_calls": [], "requests": [], "errors": []}
+
     def _save_history_db(self):
         """Save the history database to disk."""
         try:
@@ -313,14 +311,14 @@ class ResourceManager:
                 json.dump(self.history_db, f, indent=2)
         except Exception as e:
             logger.error(f"Error saving history database: {e}")
-    
+
     def register_hdf5_file(self, file_path: Path) -> bool:
         """
         Register an HDF5 file in the storage index.
-        
+
         Args:
             file_path: Path to the HDF5 file
-            
+
         Returns:
             True if registration was successful
         """
@@ -328,111 +326,121 @@ class ResourceManager:
         if not file_path.exists():
             logger.error(f"File not found: {file_path}")
             return False
-        
+
         try:
             # Get basic file information
             with HDF5Manager(file_path) as h5m:
                 root_info = h5m.get_object_info(h5m.file["/"])
-                
+
                 # Store in storage index
                 self.storage_index["files"][str(file_path)] = {
                     "path": str(file_path),
                     "uri": f"hdf5://{file_path}",
                     "last_accessed": datetime.now().isoformat(),
-                    "root_info": root_info
+                    "root_info": root_info,
                 }
-                
+
                 self._save_storage_index()
                 logger.info(f"Registered HDF5 file: {file_path}")
                 return True
-                
+
         except Exception as e:
             logger.error(f"Error registering HDF5 file: {e}")
             return False
-    
+
     def get_registered_files(self) -> List[Dict[str, Any]]:
         """
         Get a list of all registered HDF5 files.
-        
+
         Returns:
             List of file information dictionaries
         """
         return list(self.storage_index["files"].values())
-    
+
     def add_session(self, session_id: str, client_info: Dict[str, Any]) -> None:
         """
         Add a new session to the history database.
-        
+
         Args:
             session_id: Unique session identifier
             client_info: Client information
         """
-        self.history_db["sessions"].append({
-            "session_id": session_id,
-            "client_info": client_info,
-            "start_time": datetime.now().isoformat(),
-            "active": True
-        })
+        self.history_db["sessions"].append(
+            {
+                "session_id": session_id,
+                "client_info": client_info,
+                "start_time": datetime.now().isoformat(),
+                "active": True,
+            }
+        )
         self._save_history_db()
-    
-    def add_tool_call(self, session_id: str, tool_name: str, arguments: Dict[str, Any]) -> None:
+
+    def add_tool_call(
+        self, session_id: str, tool_name: str, arguments: Dict[str, Any]
+    ) -> None:
         """
         Record a tool call in the history database.
-        
+
         Args:
             session_id: Session identifier
             tool_name: Name of the tool being called
             arguments: Tool arguments
         """
-        self.history_db["tool_calls"].append({
-            "session_id": session_id,
-            "tool_name": tool_name,
-            "arguments": arguments,
-            "timestamp": datetime.now().isoformat()
-        })
+        self.history_db["tool_calls"].append(
+            {
+                "session_id": session_id,
+                "tool_name": tool_name,
+                "arguments": arguments,
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
         # Only save periodically to avoid excessive writes
         if len(self.history_db["tool_calls"]) % 10 == 0:
             self._save_history_db()
-    
+
     def add_request(self, session_id: str, request_info: Dict[str, Any]) -> None:
         """
         Record a client request in the history database.
-        
+
         Args:
             session_id: Session identifier
             request_info: Request information
         """
-        self.history_db["requests"].append({
-            "session_id": session_id,
-            "request_info": request_info,
-            "timestamp": datetime.now().isoformat()
-        })
+        self.history_db["requests"].append(
+            {
+                "session_id": session_id,
+                "request_info": request_info,
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
         # Only save periodically
         if len(self.history_db["requests"]) % 10 == 0:
             self._save_history_db()
-    
+
     def add_error(self, session_id: str, error_type: str, error_message: str) -> None:
         """
         Record an error in the history database.
-        
+
         Args:
             session_id: Session identifier
             error_type: Type of error
             error_message: Error message
         """
-        self.history_db["errors"].append({
-            "session_id": session_id,
-            "error_type": error_type,
-            "error_message": error_message,
-            "timestamp": datetime.now().isoformat()
-        })
+        self.history_db["errors"].append(
+            {
+                "session_id": session_id,
+                "error_type": error_type,
+                "error_message": error_message,
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
         # Save immediately for errors
         self._save_history_db()
-    
+
     def cache_dataset(self, file_path: str, dataset_path: str, data: Any) -> None:
         """
         Cache dataset data for quick access.
-        
+
         Args:
             file_path: Path to the HDF5 file
             dataset_path: Path to the dataset within the file
@@ -441,20 +449,20 @@ class ResourceManager:
         key = f"{file_path}:{dataset_path}"
         self.cache_db["datasets"][key] = {
             "data": data if not hasattr(data, "tolist") else data.tolist(),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
         # Save periodically
         if len(self.cache_db["datasets"]) % 5 == 0:
             self._save_cache_db()
-    
+
     def get_cached_dataset(self, file_path: str, dataset_path: str) -> Optional[Any]:
         """
         Get cached dataset data if available.
-        
+
         Args:
             file_path: Path to the HDF5 file
             dataset_path: Path to the dataset within the file
-            
+
         Returns:
             Cached data or None if not in cache
         """
@@ -466,38 +474,42 @@ class ResourceManager:
     def get_hdf5_file(self, file_path: str) -> Optional[LazyHDF5Proxy]:
         """
         Get a lazy-loaded HDF5 file handle.
-        
+
         Args:
             file_path: Path to the HDF5 file
-            
+
         Returns:
             LazyHDF5Proxy object or None if file not found
         """
         file_path = str(Path(file_path).resolve())
-        
+
         with self.lock:
             if file_path not in self.hdf5_files:
                 if not Path(file_path).exists():
                     logger.error(f"File not found: {file_path}")
                     return None
-                    
+
                 # Create new lazy proxy
                 self.hdf5_files[file_path] = LazyHDF5Proxy(Path(file_path), self)
-                
+
             return self.hdf5_files[file_path]
-            
-    def get_dataset(self, file_path: str, dataset_path: str,
-                   start: Optional[tuple] = None,
-                   count: Optional[tuple] = None) -> Optional[np.ndarray]:
+
+    def get_dataset(
+        self,
+        file_path: str,
+        dataset_path: str,
+        start: Optional[tuple] = None,
+        count: Optional[tuple] = None,
+    ) -> Optional[np.ndarray]:
         """
         Get dataset from HDF5 file with lazy loading.
-        
+
         Args:
             file_path: Path to HDF5 file
             dataset_path: Path to dataset within file
             start: Starting indices for slicing
             count: Number of elements to retrieve
-            
+
         Returns:
             NumPy array or None if dataset not found
         """
@@ -507,28 +519,28 @@ class ResourceManager:
                 cached_data = self.get_cached_dataset(file_path, dataset_path)
                 if cached_data is not None:
                     return cached_data
-            
+
             # Get file handle
             h5_file = self.get_hdf5_file(file_path)
             if h5_file is None:
                 return None
-                
+
             # Create dataset proxy
             dataset_proxy = LazyDatasetProxy(h5_file, dataset_path)
-            
+
             # Get data
             if start is not None and count is not None:
                 slices = tuple(slice(s, s + c) for s, c in zip(start, count))
                 data = dataset_proxy[slices]
             else:
                 data = dataset_proxy[:]
-                
+
             # Cache complete datasets
             if start is None and count is None:
                 self.cache_dataset(file_path, dataset_path, data)
-                
+
             return data
-            
+
         except Exception as e:
             logger.error(f"Error reading dataset: {e}")
             return None
@@ -546,23 +558,25 @@ class ResourceManager:
             self._save_storage_index()
             self._save_cache_db()
             self._save_history_db()
-            
+
             # Close all open HDF5 files
             for file_proxy in self.hdf5_files.values():
                 file_proxy.close()
             self.hdf5_files.clear()
-            
+
             # Clear caches
             self.file_cache = LRUCache(capacity=self.cache_capacity)
             self.dataset_cache = LRUCache(self.cache_capacity)
-            
+
             logger.info("Resource manager shutdown complete")
         except Exception as e:
             logger.error(f"Error during resource manager shutdown: {e}")
 
+
 # =========================================================================
 # File Discovery Functions
 # =========================================================================
+
 
 def discover_hdf5_files_in_roots(roots: List[Path]) -> List[Path]:
     """Discover all HDF5 files within client-provided roots.
@@ -594,4 +608,3 @@ def discover_hdf5_files_in_roots(roots: List[Path]) -> List[Path]:
     logger.info(f"Total discovered: {len(unique)} HDF5 files")
 
     return unique
-

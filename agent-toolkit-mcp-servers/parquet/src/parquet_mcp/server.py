@@ -1,7 +1,5 @@
 """FastMCP server for Apache Parquet files."""
 
-import asyncio
-import json
 from typing import Optional, List, Union
 from fastmcp import FastMCP
 from parquet_mcp.capabilities.parquet_handler import (

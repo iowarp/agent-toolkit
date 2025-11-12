@@ -108,10 +108,6 @@ async def test_column_preview_type_consistency(test_parquet_file):
 
         if data["status"] == "success":
             # All values in the column should match the expected type
-            string_types = {"string", "utf8", "large_string"}
-            numeric_types = {"int32", "int64", "float", "double"}
-            bool_types = {"bool", "boolean"}
-
             for value in data["data"]:
                 if value is None:
                     continue

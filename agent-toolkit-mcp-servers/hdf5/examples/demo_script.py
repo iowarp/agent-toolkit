@@ -27,7 +27,7 @@ def demo():
     print("=" * 70)
     print()
 
-    with h5py.File(demo_file, 'r') as f:
+    with h5py.File(demo_file, "r") as f:
         # 1. Explore structure (via list_keys, visit tools)
         print("1. File Structure Exploration (MCP: list_keys, visit)")
         print(f"   Root groups: {list(f.keys())}")
@@ -36,7 +36,7 @@ def demo():
 
         # 2. Dataset metadata (via get_shape, get_dtype, get_size tools)
         print("2. Dataset Metadata (MCP: get_shape, get_dtype, get_size)")
-        temp = f['simulation/temperature']
+        temp = f["simulation/temperature"]
         print(f"   Temperature shape: {temp.shape}")
         print(f"   Temperature type: {temp.dtype}")
         print(f"   Temperature size: {temp.size} elements")
@@ -66,7 +66,7 @@ def demo():
 
         # 6. Multiple datasets (via batch_read tool)
         print("6. Multi-Dataset Operations (MCP: hdf5_batch_read)")
-        pressure = f['simulation/pressure']
+        pressure = f["simulation/pressure"]
         print(f"   Temperature mean: {temp[:].mean():.2f} K")
         print(f"   Pressure mean: {pressure[:].mean():.2f} Pa")
         print("   → Parallel batch reading available")
@@ -74,7 +74,7 @@ def demo():
 
         # 7. Analysis results (via get_by_path, read_full_dataset)
         print("7. Analysis Data Access (MCP: get_by_path, read_full_dataset)")
-        mean_temp = f['analysis/mean_temp']
+        mean_temp = f["analysis/mean_temp"]
         print(f"   Temporal mean shape: {mean_temp.shape}")
         print(f"   Min mean temp: {mean_temp[:].min():.2f} K")
         print(f"   Max mean temp: {mean_temp[:].max():.2f} K")
@@ -102,4 +102,5 @@ def demo():
 
 if __name__ == "__main__":
     import sys
+
     sys.exit(demo())

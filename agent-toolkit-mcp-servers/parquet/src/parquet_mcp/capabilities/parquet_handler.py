@@ -2,11 +2,10 @@
 
 import json
 import os
-import re
 import pyarrow as pa
 import pyarrow.parquet as pq
 import pyarrow.compute as pc
-from typing import Optional, List, Union, Dict, Any
+from typing import Optional, List, Dict, Any
 
 
 def _apply_filter(table: pa.Table, filter_dict: Optional[Dict[str, Any]]) -> pa.Table:
@@ -367,7 +366,6 @@ async def read_slice(
         table = table.slice(offset=start_row, length=num_rows)
 
         # Apply filter if provided
-        rows_before_filter = len(table)
         table = _apply_filter(table, filter_dict)
         rows_after_filter = len(table)
 

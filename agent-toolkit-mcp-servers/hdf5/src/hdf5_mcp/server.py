@@ -76,8 +76,7 @@ from .resources import ResourceManager, LazyHDF5Proxy, discover_hdf5_files_in_ro
 
 # Configure logging
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
@@ -96,6 +95,7 @@ client_roots: List[Path] = []
 # =========================================================================
 # Server Lifespan Management
 # =========================================================================
+
 
 @asynccontextmanager
 async def lifespan(app):
@@ -126,6 +126,7 @@ async def lifespan(app):
     # Cleanup
     await cleanup()
 
+
 # Create FastMCP server with lifespan and instructions
 mcp = FastMCP(
     name="HDF5",
@@ -155,15 +156,17 @@ mcp = FastMCP(
         - Analysis tools include LLM-powered insights
         - Interactive export with format selection
     """,
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # =========================================================================
 # Performance & Error Decorators
 # =========================================================================
 
+
 def with_performance_tracking(func):
     """Track performance with adaptive units."""
+
     @wraps(func)
     async def wrapper(*args, **kwargs):
         start = time.perf_counter_ns()
@@ -186,10 +189,13 @@ def with_performance_tracking(func):
                 result += f"\n\n⏱ {perf_str}"
 
         return result
+
     return wrapper
+
 
 def with_error_handling(func):
     """Consistent error handling for all tools."""
+
     @wraps(func)
     async def wrapper(*args, **kwargs):
         try:
@@ -197,11 +203,14 @@ def with_error_handling(func):
         except Exception as e:
             logger.error(f"Error in {func.__name__}: {e}")
             return f"Error: {str(e)}"
+
     return wrapper
+
 
 # =========================================================================
 # FILE OPERATIONS TOOLS
 # =========================================================================
+
 
 @mcp.tool(
     tags={"file", "core"},
@@ -210,12 +219,12 @@ def with_error_handling(func):
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": False,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def open_file(path: str, mode: str = 'r') -> str:
+async def open_file(path: str, mode: str = "r") -> str:
     """Open an HDF5 file for operations.
 
     Args:
@@ -229,9 +238,12 @@ async def open_file(path: str, mode: str = 'r') -> str:
 
     current_file = resource_manager.get_hdf5_file(path)
     if current_file is None:
-        raise ToolError(f"Could not open file {path}. File may not exist or is not accessible.")
+        raise ToolError(
+            f"Could not open file {path}. File may not exist or is not accessible."
+        )
 
     return f"Successfully opened {path} in {mode} mode"
+
 
 @mcp.tool(
     tags={"file", "core"},
@@ -240,8 +252,8 @@ async def open_file(path: str, mode: str = 'r') -> str:
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": False,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 async def close_file() -> str:
@@ -260,6 +272,7 @@ async def close_file() -> str:
 
     raise ToolError("No file currently open")
 
+
 @mcp.tool(
     tags={"file", "info"},
     annotations={
@@ -267,8 +280,8 @@ async def close_file() -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 async def get_filename() -> str:
@@ -282,6 +295,7 @@ async def get_filename() -> str:
 
     return current_file.filename
 
+
 @mcp.tool(
     tags={"file", "info"},
     annotations={
@@ -289,8 +303,8 @@ async def get_filename() -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 async def get_mode() -> str:
@@ -304,6 +318,7 @@ async def get_mode() -> str:
 
     return current_file.mode
 
+
 @mcp.tool(
     tags={"dataset", "navigation"},
     annotations={
@@ -311,8 +326,8 @@ async def get_mode() -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -340,6 +355,7 @@ async def get_by_path(path: str) -> str:
     else:
         return f"Object: {path}, type: {type(obj).__name__}"
 
+
 @mcp.tool(
     tags={"dataset", "navigation"},
     annotations={
@@ -347,8 +363,8 @@ async def get_by_path(path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 async def list_keys(path: str = "/") -> str:
@@ -374,6 +390,7 @@ async def list_keys(path: str = "/") -> str:
     keys = list(obj.keys())
     return json.dumps(keys, indent=2)
 
+
 @mcp.tool(
     tags={"dataset", "navigation"},
     annotations={
@@ -381,8 +398,8 @@ async def list_keys(path: str = "/") -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -401,18 +418,17 @@ async def visit(callback_fn: str = "collect_paths") -> str:
     paths = []
 
     def collect_paths(name, obj):
-        paths.append({
-            "name": name,
-            "type": type(obj).__name__
-        })
+        paths.append({"name": name, "type": type(obj).__name__})
         return None
 
     current_file.file.visititems(collect_paths)
     return json.dumps(paths, indent=2)
 
+
 # =========================================================================
 # DATASET OPERATIONS TOOLS
 # =========================================================================
+
 
 @mcp.tool(
     tags={"dataset", "read"},
@@ -421,8 +437,8 @@ async def visit(callback_fn: str = "collect_paths") -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -452,13 +468,14 @@ async def read_full_dataset(path: str) -> str:
     # Format output
     if isinstance(data, np.ndarray) and data.size > 0:
         if np.array_equal(data, np.arange(data.size)):
-            description = f"array from 0 to {data.size-1}"
+            description = f"array from 0 to {data.size - 1}"
         else:
             description = f"array of shape {data.shape} with dtype {data.dtype}"
     else:
         description = str(data)
 
     return f"Successfully read dataset {path}: {description}"
+
 
 @mcp.tool(
     tags={"dataset", "read"},
@@ -467,8 +484,8 @@ async def read_full_dataset(path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -496,12 +513,12 @@ async def read_partial_dataset(path: str, start: str = None, count: str = None) 
 
     # Parse start and count
     if start:
-        start_tuple = tuple(int(x.strip()) for x in start.split(','))
+        start_tuple = tuple(int(x.strip()) for x in start.split(","))
     else:
         start_tuple = tuple(0 for _ in dataset.shape)
 
     if count:
-        count_tuple = tuple(int(x.strip()) for x in count.split(','))
+        count_tuple = tuple(int(x.strip()) for x in count.split(","))
     else:
         count_tuple = dataset.shape
 
@@ -517,6 +534,7 @@ async def read_partial_dataset(path: str, start: str = None, count: str = None) 
         f"First few values: {data.flat[:5].tolist()}"
     )
 
+
 @mcp.tool(
     tags={"dataset", "metadata"},
     annotations={
@@ -524,8 +542,8 @@ async def read_partial_dataset(path: str, start: str = None, count: str = None) 
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -551,6 +569,7 @@ async def get_shape(path: str) -> str:
 
     return str(dataset.shape)
 
+
 @mcp.tool(
     tags={"dataset", "metadata"},
     annotations={
@@ -558,8 +577,8 @@ async def get_shape(path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -585,6 +604,7 @@ async def get_dtype(path: str) -> str:
 
     return str(dataset.dtype)
 
+
 @mcp.tool(
     tags={"dataset", "metadata"},
     annotations={
@@ -592,8 +612,8 @@ async def get_dtype(path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -619,6 +639,7 @@ async def get_size(path: str) -> str:
 
     return str(dataset.size)
 
+
 @mcp.tool(
     tags={"dataset", "metadata", "performance"},
     annotations={
@@ -626,8 +647,8 @@ async def get_size(path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -662,9 +683,11 @@ async def get_chunks(path: str) -> str:
         f"Chunk size: {chunk_size_kb:.2f} KB"
     )
 
+
 # =========================================================================
 # ATTRIBUTE OPERATIONS TOOLS
 # =========================================================================
+
 
 @mcp.tool(
     tags={"attribute", "metadata"},
@@ -673,8 +696,8 @@ async def get_chunks(path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -704,6 +727,7 @@ async def read_attribute(path: str, name: str) -> str:
 
     raise ToolError(f"Attribute '{name}' not found at {path}")
 
+
 @mcp.tool(
     tags={"attribute", "metadata"},
     annotations={
@@ -711,8 +735,8 @@ async def read_attribute(path: str, name: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -747,9 +771,11 @@ async def list_attributes(path: str) -> str:
 
     return f"Attributes at {path}:\n{json.dumps(attrs, indent=2)}"
 
+
 # =========================================================================
 # PERFORMANCE TOOLS - Parallel, Batch, Streaming
 # =========================================================================
+
 
 @mcp.tool(
     tags={"performance", "parallel", "scan"},
@@ -758,12 +784,14 @@ async def list_attributes(path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def hdf5_parallel_scan(directory: str, pattern: str = "*.h5", ctx: Context = None) -> str:
+async def hdf5_parallel_scan(
+    directory: str, pattern: str = "*.h5", ctx: Context = None
+) -> str:
     """Fast multi-file scanning with parallel processing.
 
     Args:
@@ -798,21 +826,17 @@ async def hdf5_parallel_scan(directory: str, pattern: str = "*.h5", ctx: Context
             file_path = future_to_file[future]
 
             if ctx:
-                await ctx.report_progress(i, len(future_to_file), f"Scanned {i}/{len(future_to_file)} files")
+                await ctx.report_progress(
+                    i, len(future_to_file), f"Scanned {i}/{len(future_to_file)} files"
+                )
 
             try:
                 result = future.result()
-                scan_results.append({
-                    "file": file_path,
-                    "status": "success",
-                    **result
-                })
+                scan_results.append({"file": file_path, "status": "success", **result})
             except Exception as e:
-                scan_results.append({
-                    "file": file_path,
-                    "status": "error",
-                    "error": str(e)
-                })
+                scan_results.append(
+                    {"file": file_path, "status": "error", "error": str(e)}
+                )
 
     # Format results
     successful = [r for r in scan_results if r["status"] == "success"]
@@ -836,6 +860,7 @@ async def hdf5_parallel_scan(directory: str, pattern: str = "*.h5", ctx: Context
 
     return summary
 
+
 @mcp.tool(
     tags={"performance", "parallel", "read"},
     annotations={
@@ -843,12 +868,14 @@ async def hdf5_parallel_scan(directory: str, pattern: str = "*.h5", ctx: Context
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def hdf5_batch_read(paths: str, slice_spec: Optional[str] = None, ctx: Context = None) -> str:
+async def hdf5_batch_read(
+    paths: str, slice_spec: Optional[str] = None, ctx: Context = None
+) -> str:
     """Read multiple datasets in parallel.
 
     Args:
@@ -866,7 +893,7 @@ async def hdf5_batch_read(paths: str, slice_spec: Optional[str] = None, ctx: Con
     try:
         path_list = json.loads(paths)
     except Exception:
-        path_list = [p.strip() for p in paths.split(',') if p.strip()]
+        path_list = [p.strip() for p in paths.split(",") if p.strip()]
 
     if ctx:
         await ctx.info(f"Reading {len(path_list)} datasets in parallel")
@@ -896,7 +923,9 @@ async def hdf5_batch_read(paths: str, slice_spec: Optional[str] = None, ctx: Con
                 results[path] = data_info
 
                 if ctx:
-                    await ctx.report_progress(i, len(path_list), f"Read {i}/{len(path_list)} datasets")
+                    await ctx.report_progress(
+                        i, len(path_list), f"Read {i}/{len(path_list)} datasets"
+                    )
             except Exception as e:
                 results[path] = {"error": str(e)}
 
@@ -911,10 +940,13 @@ async def hdf5_batch_read(paths: str, slice_spec: Optional[str] = None, ctx: Con
             if "preview" in result:
                 summary += f"  Preview: {result['preview']}\n"
 
-    total_size_mb = sum(r.get("size_mb", 0) for r in results.values() if "error" not in r)
+    total_size_mb = sum(
+        r.get("size_mb", 0) for r in results.values() if "error" not in r
+    )
     summary += f"\nTotal data read: {total_size_mb:.2f} MB"
 
     return summary
+
 
 @mcp.tool(
     tags={"performance", "streaming"},
@@ -923,12 +955,14 @@ async def hdf5_batch_read(paths: str, slice_spec: Optional[str] = None, ctx: Con
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def hdf5_stream_data(path: str, chunk_size: int = 1024, max_chunks: int = 100, ctx: Context = None) -> str:
+async def hdf5_stream_data(
+    path: str, chunk_size: int = 1024, max_chunks: int = 100, ctx: Context = None
+) -> str:
     """Stream large datasets efficiently with memory management.
 
     Args:
@@ -946,12 +980,14 @@ async def hdf5_stream_data(path: str, chunk_size: int = 1024, max_chunks: int = 
     dataset = current_file[path]
 
     if dataset.nbytes < 10 * 1024 * 1024:
-        return f"Dataset {path} is small ({dataset.nbytes / (1024*1024):.1f} MB), consider using regular read"
+        return f"Dataset {path} is small ({dataset.nbytes / (1024 * 1024):.1f} MB), consider using regular read"
 
     # Setup streaming
     total_elements = dataset.size
     elements_per_chunk = chunk_size
-    total_chunks = min(max_chunks, (total_elements + elements_per_chunk - 1) // elements_per_chunk)
+    total_chunks = min(
+        max_chunks, (total_elements + elements_per_chunk - 1) // elements_per_chunk
+    )
 
     if ctx:
         await ctx.info(f"Streaming {total_chunks} chunks from {path}")
@@ -966,7 +1002,11 @@ async def hdf5_stream_data(path: str, chunk_size: int = 1024, max_chunks: int = 
         end_idx = min(start_idx + elements_per_chunk, total_elements)
 
         if ctx:
-            await ctx.report_progress(chunk_idx + 1, total_chunks, f"Streamed chunk {chunk_idx + 1}/{total_chunks}")
+            await ctx.report_progress(
+                chunk_idx + 1,
+                total_chunks,
+                f"Streamed chunk {chunk_idx + 1}/{total_chunks}",
+            )
 
         # Read chunk
         if len(dataset.shape) == 1:
@@ -977,12 +1017,12 @@ async def hdf5_stream_data(path: str, chunk_size: int = 1024, max_chunks: int = 
         # Process chunk
         chunk_info = {
             "chunk": chunk_idx + 1,
-            "range": f"{start_idx}-{end_idx-1}",
+            "range": f"{start_idx}-{end_idx - 1}",
             "elements": chunk_data.size,
             "mean": float(np.mean(chunk_data)) if chunk_data.size > 0 else 0,
             "std": float(np.std(chunk_data)) if chunk_data.size > 0 else 0,
             "min": float(np.min(chunk_data)) if chunk_data.size > 0 else 0,
-            "max": float(np.max(chunk_data)) if chunk_data.size > 0 else 0
+            "max": float(np.max(chunk_data)) if chunk_data.size > 0 else 0,
         }
         chunk_summaries.append(chunk_info)
         total_processed += chunk_data.size
@@ -993,7 +1033,7 @@ async def hdf5_stream_data(path: str, chunk_size: int = 1024, max_chunks: int = 
     streaming_rate = total_processed / (1024 * 1024)
     summary = f"Stream processing complete for dataset: {path}\n\n"
     summary += "Dataset info:\n"
-    summary += f"  Total size: {dataset.nbytes / (1024*1024):.2f} MB\n"
+    summary += f"  Total size: {dataset.nbytes / (1024 * 1024):.2f} MB\n"
     summary += f"  Shape: {dataset.shape}\n"
     summary += f"  Dtype: {dataset.dtype}\n\n"
     summary += "Streaming stats:\n"
@@ -1010,6 +1050,7 @@ async def hdf5_stream_data(path: str, chunk_size: int = 1024, max_chunks: int = 
 
     return summary
 
+
 @mcp.tool(
     tags={"performance", "parallel", "analysis"},
     annotations={
@@ -1017,12 +1058,14 @@ async def hdf5_stream_data(path: str, chunk_size: int = 1024, max_chunks: int = 
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def hdf5_aggregate_stats(paths: str, stats: Optional[str] = None, ctx: Context = None) -> str:
+async def hdf5_aggregate_stats(
+    paths: str, stats: Optional[str] = None, ctx: Context = None
+) -> str:
     """Parallel statistics computation across multiple datasets.
 
     Args:
@@ -1040,11 +1083,11 @@ async def hdf5_aggregate_stats(paths: str, stats: Optional[str] = None, ctx: Con
     try:
         path_list = json.loads(paths)
     except Exception:
-        path_list = [p.strip() for p in paths.split(',') if p.strip()]
+        path_list = [p.strip() for p in paths.split(",") if p.strip()]
 
     # Parse stats
     if stats:
-        stats_list = [s.strip() for s in stats.split(',') if s.strip()]
+        stats_list = [s.strip() for s in stats.split(",") if s.strip()]
     else:
         stats_list = ["mean", "std", "min", "max", "sum", "count"]
 
@@ -1068,7 +1111,9 @@ async def hdf5_aggregate_stats(paths: str, stats: Optional[str] = None, ctx: Con
                 results[path] = dataset_stats
 
                 if ctx:
-                    await ctx.report_progress(i, len(path_list), f"Computed stats {i}/{len(path_list)}")
+                    await ctx.report_progress(
+                        i, len(path_list), f"Computed stats {i}/{len(path_list)}"
+                    )
             except Exception as e:
                 results[path] = {"error": str(e)}
 
@@ -1093,12 +1138,21 @@ async def hdf5_aggregate_stats(paths: str, stats: Optional[str] = None, ctx: Con
         summary += "Cross-dataset aggregation:\n"
 
         for stat_name in ["mean", "sum", "count"]:
-            if all(stat_name in stats_list and stat_name in result for result in successful_stats.values()):
+            if all(
+                stat_name in stats_list and stat_name in result
+                for result in successful_stats.values()
+            ):
                 values = [result[stat_name] for result in successful_stats.values()]
                 if stat_name == "mean":
-                    counts = [result.get("count", 1) for result in successful_stats.values()]
+                    counts = [
+                        result.get("count", 1) for result in successful_stats.values()
+                    ]
                     total_count = sum(counts)
-                    weighted_mean = sum(v * c for v, c in zip(values, counts)) / total_count if total_count > 0 else 0
+                    weighted_mean = (
+                        sum(v * c for v, c in zip(values, counts)) / total_count
+                        if total_count > 0
+                        else 0
+                    )
                     summary += f"  Overall {stat_name}: {weighted_mean:.6f}\n"
                 elif stat_name == "sum":
                     summary += f"  Total {stat_name}: {sum(values):.6f}\n"
@@ -1115,9 +1169,11 @@ async def hdf5_aggregate_stats(paths: str, stats: Optional[str] = None, ctx: Con
 
     return summary
 
+
 # =========================================================================
 # DISCOVERY TOOLS - Analysis, Patterns, Optimization
 # =========================================================================
+
 
 @mcp.tool(
     tags={"discovery", "ai-powered", "analysis"},
@@ -1126,8 +1182,8 @@ async def hdf5_aggregate_stats(paths: str, stats: Optional[str] = None, ctx: Con
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -1194,8 +1250,11 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
                 # Unexpected error - log it
                 logger.warning(f"Error during sampling: {e}")
                 import traceback
+
                 logger.debug(traceback.format_exc())
-                analysis += f"\n\n[Debug: Sampling error - {type(e).__name__}: {str(e)}]\n"
+                analysis += (
+                    f"\n\n[Debug: Sampling error - {type(e).__name__}: {str(e)}]\n"
+                )
         elif not ctx:
             analysis += "\n\n[Debug: No Context provided to tool]\n"
         elif not datasets:
@@ -1206,7 +1265,7 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
         analysis += "Type: Dataset\n"
         analysis += f"Shape: {obj.shape}\n"
         analysis += f"Data type: {obj.dtype}\n"
-        analysis += f"Size: {obj.nbytes / (1024*1024):.2f} MB\n"
+        analysis += f"Size: {obj.nbytes / (1024 * 1024):.2f} MB\n"
         analysis += f"Chunks: {obj.chunks}\n"
 
         # Add LLM insights for datasets (optional - requires client sampling support)
@@ -1214,7 +1273,7 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
             try:
                 llm_response = await ctx.sample(
                     f"Analyze this HDF5 dataset at path '{path}': "
-                    f"Shape {obj.shape}, dtype {obj.dtype}, size {obj.nbytes / (1024*1024):.2f} MB. "
+                    f"Shape {obj.shape}, dtype {obj.dtype}, size {obj.nbytes / (1024 * 1024):.2f} MB. "
                     f"What might this data represent?"
                 )
                 analysis += f"\n\n🤖 AI Insights:\n{llm_response.text}\n"
@@ -1223,12 +1282,14 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
             except Exception as e:
                 logger.warning(f"Error during sampling: {e}")
                 import traceback
+
                 logger.debug(traceback.format_exc())
     else:
         analysis = f"Structure Analysis for: {path}\n"
         analysis += f"Type: {type(obj).__name__}\n"
 
     return analysis
+
 
 @mcp.tool(
     tags={"discovery", "ai-powered", "similarity"},
@@ -1237,12 +1298,14 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def find_similar_datasets(reference_path: str, similarity_threshold: float = 0.8, ctx: Context = None) -> str:
+async def find_similar_datasets(
+    reference_path: str, similarity_threshold: float = 0.8, ctx: Context = None
+) -> str:
     """Find datasets with similar characteristics to a reference dataset with AI analysis.
 
     Args:
@@ -1279,21 +1342,25 @@ async def find_similar_datasets(reference_path: str, similarity_threshold: float
             similarity = (shape_sim + dtype_sim + size_ratio) / 3.0
 
             if similarity >= similarity_threshold:
-                similar_datasets.append({
-                    "path": name,
-                    "similarity": similarity,
-                    "shape": obj.shape,
-                    "dtype": str(obj.dtype),
-                    "size_mb": obj.nbytes / (1024*1024)
-                })
+                similar_datasets.append(
+                    {
+                        "path": name,
+                        "similarity": similarity,
+                        "shape": obj.shape,
+                        "dtype": str(obj.dtype),
+                        "size_mb": obj.nbytes / (1024 * 1024),
+                    }
+                )
 
-    actual_file = current_file.file if hasattr(current_file, 'file') else current_file
+    actual_file = current_file.file if hasattr(current_file, "file") else current_file
     actual_file.visititems(check_dataset)
 
     similar_datasets.sort(key=lambda x: x["similarity"], reverse=True)
 
     result = f"Similar datasets to '{reference_path}':\n"
-    result += f"Reference: {ref_shape}, {ref_dtype}, {ref_size/(1024*1024):.2f} MB\n\n"
+    result += (
+        f"Reference: {ref_shape}, {ref_dtype}, {ref_size / (1024 * 1024):.2f} MB\n\n"
+    )
 
     if similar_datasets:
         result += f"Found {len(similar_datasets)} similar datasets:\n"
@@ -1305,7 +1372,12 @@ async def find_similar_datasets(reference_path: str, similarity_threshold: float
         if ctx:
             try:
                 top_similar = similar_datasets[:5]
-                similar_paths = ', '.join([f"{ds['path']} (similarity {ds['similarity']:.2f})" for ds in top_similar])
+                similar_paths = ", ".join(
+                    [
+                        f"{ds['path']} (similarity {ds['similarity']:.2f})"
+                        for ds in top_similar
+                    ]
+                )
                 llm_response = await ctx.sample(
                     f"Explain why these datasets are similar to '{reference_path}' "
                     f"(shape {ref_shape}, dtype {ref_dtype}): "
@@ -1318,11 +1390,13 @@ async def find_similar_datasets(reference_path: str, similarity_threshold: float
             except Exception as e:
                 logger.warning(f"Error during sampling: {e}")
                 import traceback
+
                 logger.debug(traceback.format_exc())
     else:
         result += "No similar datasets found with the given threshold."
 
     return result
+
 
 @mcp.tool(
     tags={"discovery", "ai-powered", "recommendation"},
@@ -1331,8 +1405,8 @@ async def find_similar_datasets(reference_path: str, similarity_threshold: float
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
@@ -1379,23 +1453,31 @@ async def suggest_next_exploration(current_path: str = "/", ctx: Context = None)
                     if "data" in item_name.lower() or "result" in item_name.lower():
                         score += 1
 
-                    suggestions.append({
-                        "path": f"{current_path}/{item_name}" if current_path != "/" else f"/{item_name}",
-                        "type": "dataset",
-                        "score": score,
-                        "info": f"Shape: {item.shape}, Size: {size_mb:.2f} MB"
-                    })
+                    suggestions.append(
+                        {
+                            "path": f"{current_path}/{item_name}"
+                            if current_path != "/"
+                            else f"/{item_name}",
+                            "type": "dataset",
+                            "score": score,
+                            "info": f"Shape: {item.shape}, Size: {size_mb:.2f} MB",
+                        }
+                    )
 
                 elif isinstance(item, h5py.Group):
                     child_count = len(list(item.keys()))
                     score = min(3, child_count // 5)
 
-                    suggestions.append({
-                        "path": f"{current_path}/{item_name}" if current_path != "/" else f"/{item_name}",
-                        "type": "group",
-                        "score": score,
-                        "info": f"Contains {child_count} items"
-                    })
+                    suggestions.append(
+                        {
+                            "path": f"{current_path}/{item_name}"
+                            if current_path != "/"
+                            else f"/{item_name}",
+                            "type": "group",
+                            "score": score,
+                            "info": f"Contains {child_count} items",
+                        }
+                    )
             except Exception:
                 continue
 
@@ -1412,7 +1494,9 @@ async def suggest_next_exploration(current_path: str = "/", ctx: Context = None)
         if ctx:
             try:
                 top_suggestions = suggestions[:3]
-                suggestion_list = ', '.join([f"{s['path']} ({s['info']})" for s in top_suggestions])
+                suggestion_list = ", ".join(
+                    [f"{s['path']} ({s['info']})" for s in top_suggestions]
+                )
                 llm_response = await ctx.sample(
                     f"Based on these top exploration targets at '{current_path}': "
                     f"{suggestion_list}, "
@@ -1424,11 +1508,13 @@ async def suggest_next_exploration(current_path: str = "/", ctx: Context = None)
             except Exception as e:
                 logger.warning(f"Error during sampling: {e}")
                 import traceback
+
                 logger.debug(traceback.format_exc())
     else:
         result += "No additional exploration targets found at this location."
 
     return result
+
 
 @mcp.tool(
     tags={"discovery", "ai-powered", "performance"},
@@ -1437,12 +1523,14 @@ async def suggest_next_exploration(current_path: str = "/", ctx: Context = None)
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def identify_io_bottlenecks(analysis_paths: Optional[List[str]] = None, ctx: Context = None) -> str:
+async def identify_io_bottlenecks(
+    analysis_paths: Optional[List[str]] = None, ctx: Context = None
+) -> str:
     """Identify potential I/O bottlenecks and performance issues with AI recommendations.
 
     Args:
@@ -1462,7 +1550,9 @@ async def identify_io_bottlenecks(analysis_paths: Optional[List[str]] = None, ct
             if isinstance(obj, h5py.Dataset):
                 analysis_paths.append(name)
 
-        actual_file = current_file.file if hasattr(current_file, 'file') else current_file
+        actual_file = (
+            current_file.file if hasattr(current_file, "file") else current_file
+        )
         actual_file.visititems(collect_datasets)
         analysis_paths = analysis_paths[:10]
 
@@ -1478,21 +1568,20 @@ async def identify_io_bottlenecks(analysis_paths: Optional[List[str]] = None, ct
             if size_mb > 100 and dataset.chunks is None:
                 issues.append(f"Large dataset ({size_mb:.1f} MB) without chunking")
 
-            if dataset.chunks and np.prod(dataset.chunks) * dataset.dtype.itemsize < 1024:
+            if (
+                dataset.chunks
+                and np.prod(dataset.chunks) * dataset.dtype.itemsize < 1024
+            ):
                 issues.append("Very small chunk size may hurt performance")
 
-            if size_mb > 50 and not hasattr(dataset, 'compression'):
+            if size_mb > 50 and not hasattr(dataset, "compression"):
                 issues.append("Large dataset without compression")
 
             if len(dataset.shape) > 3:
                 issues.append("High-dimensional array may have access pattern issues")
 
             if issues:
-                bottlenecks.append({
-                    "path": path,
-                    "size_mb": size_mb,
-                    "issues": issues
-                })
+                bottlenecks.append({"path": path, "size_mb": size_mb, "issues": issues})
         except Exception:
             continue
 
@@ -1501,32 +1590,35 @@ async def identify_io_bottlenecks(analysis_paths: Optional[List[str]] = None, ct
         result += f"Found potential issues in {len(bottlenecks)} datasets:\n\n"
         for bottleneck in bottlenecks:
             result += f"📄 {bottleneck['path']} ({bottleneck['size_mb']:.2f} MB)\n"
-            for issue in bottleneck['issues']:
+            for issue in bottleneck["issues"]:
                 result += f"  ⚠️  {issue}\n"
             result += "\n"
 
         # Add LLM recommendations (optional - requires client sampling support)
         if ctx:
             try:
-                bottleneck_summary = "; ".join([
-                    f"{b['path']} ({', '.join(b['issues'])})"
-                    for b in bottlenecks[:3]
-                ])
+                bottleneck_summary = "; ".join(
+                    [f"{b['path']} ({', '.join(b['issues'])})" for b in bottlenecks[:3]]
+                )
                 llm_response = await ctx.sample(
                     f"I found these I/O bottlenecks in HDF5 datasets: {bottleneck_summary}. "
                     f"What specific optimization strategies would you recommend to address these issues?"
                 )
-                result += f"\n🤖 AI Optimization Recommendations:\n{llm_response.text}\n"
+                result += (
+                    f"\n🤖 AI Optimization Recommendations:\n{llm_response.text}\n"
+                )
             except ValueError as e:
                 logger.debug(f"Sampling not supported: {e}")
             except Exception as e:
                 logger.warning(f"Error during sampling: {e}")
                 import traceback
+
                 logger.debug(traceback.format_exc())
     else:
         result += "✅ No significant I/O bottlenecks detected."
 
     return result
+
 
 @mcp.tool(
     tags={"discovery", "performance", "optimization"},
@@ -1535,12 +1627,14 @@ async def identify_io_bottlenecks(analysis_paths: Optional[List[str]] = None, ct
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def optimize_access_pattern(dataset_path: str, access_pattern: str = "sequential") -> str:
+async def optimize_access_pattern(
+    dataset_path: str, access_pattern: str = "sequential"
+) -> str:
     """Suggest better approaches for data access based on usage patterns.
 
     Args:
@@ -1589,7 +1683,9 @@ async def optimize_access_pattern(dataset_path: str, access_pattern: str = "sequ
             if chunk_size > 10:
                 result += f"• Consider smaller chunks (current: {chunk_size:.1f} MB)\n"
             else:
-                result += f"• Chunk size ({chunk_size:.2f} MB) is good for random access\n"
+                result += (
+                    f"• Chunk size ({chunk_size:.2f} MB) is good for random access\n"
+                )
 
         result += "• Use read_partial_dataset() with specific slices\n"
 
@@ -1608,9 +1704,11 @@ async def optimize_access_pattern(dataset_path: str, access_pattern: str = "sequ
 
     return result
 
+
 # =========================================================================
 # ADMIN & DISCOVERY TOOLS
 # =========================================================================
+
 
 @mcp.tool(
     tags={"admin", "discovery"},
@@ -1619,8 +1717,8 @@ async def optimize_access_pattern(dataset_path: str, access_pattern: str = "sequ
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": False,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 async def refresh_hdf5_resources(ctx: Context = None) -> str:
     """Re-scan client roots and update available HDF5 resources.
@@ -1650,6 +1748,7 @@ async def refresh_hdf5_resources(ctx: Context = None) -> str:
         f"Use list_available_hdf5_files() to see all files."
     )
 
+
 @mcp.tool(
     tags={"discovery", "helper"},
     annotations={
@@ -1657,8 +1756,8 @@ async def refresh_hdf5_resources(ctx: Context = None) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 async def list_available_hdf5_files() -> str:
     """List all registered HDF5 files with resource URIs for Claude Code @ mentions.
@@ -1673,7 +1772,7 @@ async def list_available_hdf5_files() -> str:
 
     result = f"Available HDF5 Files ({len(files)}):\n\n"
     for i, file_info in enumerate(files, 1):
-        path = file_info['path']
+        path = file_info["path"]
         name = Path(path).name
         result += f"{i}. {name}\n"
         result += f"   Path: {path}\n"
@@ -1682,6 +1781,7 @@ async def list_available_hdf5_files() -> str:
 
     return result
 
+
 @mcp.tool(
     tags={"dataset", "export", "interactive"},
     annotations={
@@ -1689,12 +1789,14 @@ async def list_available_hdf5_files() -> str:
         "readOnlyHint": False,
         "destructiveHint": False,
         "idempotentHint": False,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 @with_error_handling
 @with_performance_tracking
-async def export_dataset(path: str, output_path: Optional[str] = None, ctx: Context = None) -> str:
+async def export_dataset(
+    path: str, output_path: Optional[str] = None, ctx: Context = None
+) -> str:
     """Export dataset to various formats with user format selection.
 
     Args:
@@ -1722,7 +1824,7 @@ async def export_dataset(path: str, output_path: Optional[str] = None, ctx: Cont
         try:
             format_result = await ctx.elicit(
                 "What format should I export to?",
-                response_type=["csv", "json", "numpy"]
+                response_type=["csv", "json", "numpy"],
             )
 
             if format_result.action == "accept":
@@ -1736,6 +1838,7 @@ async def export_dataset(path: str, output_path: Optional[str] = None, ctx: Cont
         except Exception as e:
             logger.warning(f"Error during elicitation: {e}")
             import traceback
+
             logger.debug(traceback.format_exc())
             # Fall back to default format
             export_format = "json"
@@ -1747,7 +1850,9 @@ async def export_dataset(path: str, output_path: Optional[str] = None, ctx: Cont
     if export_format == "csv":
         # CSV export (works for 1D and 2D arrays)
         if len(data.shape) > 2:
-            raise ToolError(f"CSV export only supports 1D/2D arrays, got shape {data.shape}")
+            raise ToolError(
+                f"CSV export only supports 1D/2D arrays, got shape {data.shape}"
+            )
 
         import csv
         import io
@@ -1767,17 +1872,17 @@ async def export_dataset(path: str, output_path: Optional[str] = None, ctx: Cont
     elif export_format == "json":
         # JSON export
         if hasattr(data, "tolist"):
-            export_data = json.dumps({
-                "path": path,
-                "shape": data.shape,
-                "dtype": str(data.dtype),
-                "data": data.tolist()
-            }, indent=2)
+            export_data = json.dumps(
+                {
+                    "path": path,
+                    "shape": data.shape,
+                    "dtype": str(data.dtype),
+                    "data": data.tolist(),
+                },
+                indent=2,
+            )
         else:
-            export_data = json.dumps({
-                "path": path,
-                "data": str(data)
-            }, indent=2)
+            export_data = json.dumps({"path": path, "data": str(data)}, indent=2)
 
     elif export_format == "numpy":
         # NumPy export (return info about how to save)
@@ -1791,19 +1896,25 @@ async def export_dataset(path: str, output_path: Optional[str] = None, ctx: Cont
     # Write to file if output_path provided
     if output_path and export_format != "numpy":
         try:
-            with open(output_path, 'w') as f:
+            with open(output_path, "w") as f:
                 f.write(export_data)
             return f"Exported {path} to {output_path} as {export_format}\n{export_data[:500]}..."
         except Exception as e:
             raise ToolError(f"Error writing to {output_path}: {str(e)}")
     else:
-        return f"Exported {path} as {export_format}:\n\n{export_data[:1000]}..." if len(export_data) > 1000 else f"Exported {path} as {export_format}:\n\n{export_data}"
+        return (
+            f"Exported {path} as {export_format}:\n\n{export_data[:1000]}..."
+            if len(export_data) > 1000
+            else f"Exported {path} as {export_format}:\n\n{export_data}"
+        )
+
 
 # =========================================================================
 # HELPER FUNCTIONS
 # =========================================================================
 
-def _read_large_dataset(dataset, chunk_size=1024*1024):
+
+def _read_large_dataset(dataset, chunk_size=1024 * 1024):
     """Read large dataset in chunks."""
     if len(dataset.shape) != 1:
         return dataset[:]
@@ -1814,9 +1925,10 @@ def _read_large_dataset(dataset, chunk_size=1024*1024):
         result[i:end] = dataset[i:end]
     return result
 
+
 def _scan_single_file(file_path: str) -> dict:
     """Scan a single HDF5 file and return metadata."""
-    with h5py.File(file_path, 'r') as f:
+    with h5py.File(file_path, "r") as f:
         dataset_count = 0
         total_size = 0
         datasets = []
@@ -1826,20 +1938,23 @@ def _scan_single_file(file_path: str) -> dict:
             if isinstance(obj, h5py.Dataset):
                 dataset_count += 1
                 total_size += obj.nbytes
-                datasets.append({
-                    "name": name,
-                    "shape": obj.shape,
-                    "dtype": str(obj.dtype),
-                    "size_mb": obj.nbytes / (1024 * 1024)
-                })
+                datasets.append(
+                    {
+                        "name": name,
+                        "shape": obj.shape,
+                        "dtype": str(obj.dtype),
+                        "size_mb": obj.nbytes / (1024 * 1024),
+                    }
+                )
 
         f.visititems(count_datasets)
 
         return {
             "dataset_count": dataset_count,
             "total_size_mb": total_size / (1024 * 1024),
-            "datasets": datasets[:5]
+            "datasets": datasets[:5],
         }
+
 
 def _read_single_dataset(file_proxy, path: str, slice_obj=None) -> dict:
     """Read a single dataset with optional slicing."""
@@ -1850,9 +1965,9 @@ def _read_single_dataset(file_proxy, path: str, slice_obj=None) -> dict:
     else:
         if dataset.nbytes > 100 * 1024 * 1024:
             if len(dataset.shape) == 1:
-                data = dataset[:min(1000, dataset.shape[0])]
+                data = dataset[: min(1000, dataset.shape[0])]
             else:
-                data = dataset[:min(10, dataset.shape[0])]
+                data = dataset[: min(10, dataset.shape[0])]
         else:
             data = dataset[:]
 
@@ -1870,8 +1985,9 @@ def _read_single_dataset(file_proxy, path: str, slice_obj=None) -> dict:
         "size_mb": dataset.nbytes / (1024 * 1024),
         "preview": preview,
         "data_shape": data.shape,
-        "slice_applied": slice_obj is not None
+        "slice_applied": slice_obj is not None,
     }
+
 
 def _compute_dataset_stats(file_proxy, path: str, stats: List[str]) -> dict:
     """Compute statistics for a single dataset."""
@@ -1892,7 +2008,7 @@ def _compute_dataset_stats(file_proxy, path: str, stats: List[str]) -> dict:
         "shape": dataset.shape,
         "dtype": str(dataset.dtype),
         "size_mb": dataset.nbytes / (1024 * 1024),
-        "sampled": dataset.nbytes > 500 * 1024 * 1024
+        "sampled": dataset.nbytes > 500 * 1024 * 1024,
     }
 
     if np.issubdtype(data.dtype, np.number):
@@ -1911,15 +2027,19 @@ def _compute_dataset_stats(file_proxy, path: str, stats: List[str]) -> dict:
         if "median" in stats:
             result["median"] = float(np.median(data))
     else:
-        result["note"] = f"Non-numeric data type ({data.dtype}), limited statistics available"
+        result["note"] = (
+            f"Non-numeric data type ({data.dtype}), limited statistics available"
+        )
         if "count" in stats:
             result["count"] = int(data.size)
 
     return result
 
+
 # =========================================================================
 # RESOURCES - HDF5 URIs
 # =========================================================================
+
 
 @mcp.resource(
     "hdf5://{file_path}/metadata",
@@ -1928,8 +2048,8 @@ def _compute_dataset_stats(file_proxy, path: str, stats: List[str]) -> dict:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 async def hdf5_file_metadata(file_path: str) -> str:
     """Expose HDF5 file metadata as resource.
@@ -1941,19 +2061,20 @@ async def hdf5_file_metadata(file_path: str) -> str:
         JSON metadata
     """
     try:
-        with h5py.File(file_path, 'r') as f:
+        with h5py.File(file_path, "r") as f:
             metadata = {
                 "filename": f.filename,
                 "mode": f.mode,
                 "userblock_size": f.userblock_size,
                 "keys": list(f.keys()),
-                "attrs": dict(f.attrs)
+                "attrs": dict(f.attrs),
             }
             return json.dumps(metadata, indent=2)
     except FileNotFoundError:
         raise ResourceError(f"File not found: {file_path}")
     except Exception as e:
         raise ResourceError(f"Error reading metadata from {file_path}: {str(e)}")
+
 
 @mcp.resource(
     "hdf5://{file_path}/datasets/{dataset_path*}",
@@ -1962,8 +2083,8 @@ async def hdf5_file_metadata(file_path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 async def hdf5_dataset_resource(file_path: str, dataset_path: str) -> str:
     """Expose HDF5 dataset as resource.
@@ -1976,14 +2097,14 @@ async def hdf5_dataset_resource(file_path: str, dataset_path: str) -> str:
         Dataset data (preview for large datasets)
     """
     try:
-        with h5py.File(file_path, 'r') as f:
+        with h5py.File(file_path, "r") as f:
             dataset = f[dataset_path]
 
             data_info = {
                 "path": dataset_path,
                 "shape": dataset.shape,
                 "dtype": str(dataset.dtype),
-                "size_mb": dataset.nbytes / (1024 * 1024)
+                "size_mb": dataset.nbytes / (1024 * 1024),
             }
 
             # Include data preview
@@ -2004,6 +2125,7 @@ async def hdf5_dataset_resource(file_path: str, dataset_path: str) -> str:
     except Exception as e:
         raise ResourceError(f"Error reading dataset from {file_path}: {str(e)}")
 
+
 @mcp.resource(
     "hdf5://{file_path}/structure",
     annotations={
@@ -2011,8 +2133,8 @@ async def hdf5_dataset_resource(file_path: str, dataset_path: str) -> str:
         "readOnlyHint": True,
         "destructiveHint": False,
         "idempotentHint": True,
-        "openWorldHint": False
-    }
+        "openWorldHint": False,
+    },
 )
 async def hdf5_structure_resource(file_path: str) -> str:
     """Expose HDF5 file structure as resource.
@@ -2024,7 +2146,7 @@ async def hdf5_structure_resource(file_path: str) -> str:
         Hierarchical structure
     """
     try:
-        with h5py.File(file_path, 'r') as f:
+        with h5py.File(file_path, "r") as f:
             structure = {}
 
             def build_structure(name, obj):
@@ -2034,7 +2156,7 @@ async def hdf5_structure_resource(file_path: str) -> str:
                     structure[name] = {
                         "type": "Dataset",
                         "shape": obj.shape,
-                        "dtype": str(obj.dtype)
+                        "dtype": str(obj.dtype),
                     }
 
             f.visititems(build_structure)
@@ -2044,9 +2166,11 @@ async def hdf5_structure_resource(file_path: str) -> str:
     except Exception as e:
         raise ResourceError(f"Error reading structure from {file_path}: {str(e)}")
 
+
 # =========================================================================
 # PROMPTS - Analysis Workflows
 # =========================================================================
+
 
 @mcp.prompt()
 def explore_hdf5_file(file_path: str):
@@ -2069,6 +2193,7 @@ def explore_hdf5_file(file_path: str):
 
 This workflow will give you a comprehensive understanding of the file's contents.""")
 
+
 @mcp.prompt()
 def optimize_hdf5_access(file_path: str, access_pattern: str = "sequential"):
     """Generate optimization workflow for HDF5 I/O.
@@ -2090,6 +2215,7 @@ def optimize_hdf5_access(file_path: str, access_pattern: str = "sequential"):
 6. Monitor performance with HDF5_SHOW_PERFORMANCE=true environment variable
 
 This workflow will help you achieve optimal performance for your access patterns.""")
+
 
 @mcp.prompt()
 def compare_hdf5_datasets(file_path: str, dataset1: str, dataset2: str):
@@ -2116,6 +2242,7 @@ def compare_hdf5_datasets(file_path: str, dataset1: str, dataset2: str):
 
 This workflow provides a comprehensive comparison of the two datasets.""")
 
+
 @mcp.prompt()
 def batch_process_hdf5(directory: str, operation: str = "statistics"):
     """Generate batch processing workflow for multiple HDF5 files.
@@ -2140,9 +2267,11 @@ def batch_process_hdf5(directory: str, operation: str = "statistics"):
 
 This parallel workflow efficiently processes multiple files with minimal overhead.""")
 
+
 # =========================================================================
 # Server Lifecycle
 # =========================================================================
+
 
 async def cleanup():
     """Cleanup server resources."""
@@ -2165,9 +2294,11 @@ async def cleanup():
     except Exception as e:
         logger.error(f"Error during shutdown: {e}")
 
+
 # =========================================================================
 # Main Entry Point
 # =========================================================================
+
 
 def main():
     """Main entry point for HDF5 FastMCP server."""
@@ -2175,24 +2306,36 @@ def main():
     import sys
 
     parser = argparse.ArgumentParser(description="IoWarp HDF5 FastMCP Server v2.0")
-    parser.add_argument("--transport", choices=["stdio", "sse", "http"], default="stdio",
-                       help="Transport protocol (default: stdio)")
-    parser.add_argument("--host", default="0.0.0.0", help="Host for HTTP/SSE (default: 0.0.0.0)")
-    parser.add_argument("--port", type=int, default=8765, help="Port for HTTP/SSE (default: 8765)")
+    parser.add_argument(
+        "--transport",
+        choices=["stdio", "sse", "http"],
+        default="stdio",
+        help="Transport protocol (default: stdio)",
+    )
+    parser.add_argument(
+        "--host", default="0.0.0.0", help="Host for HTTP/SSE (default: 0.0.0.0)"
+    )
+    parser.add_argument(
+        "--port", type=int, default=8765, help="Port for HTTP/SSE (default: 8765)"
+    )
     parser.add_argument("--data-dir", type=Path, help="Directory containing HDF5 files")
-    parser.add_argument("--log-level", choices=["DEBUG", "INFO", "WARNING", "ERROR"],
-                       default="INFO", help="Logging level")
+    parser.add_argument(
+        "--log-level",
+        choices=["DEBUG", "INFO", "WARNING", "ERROR"],
+        default="INFO",
+        help="Logging level",
+    )
     args = parser.parse_args()
 
     # Configure logging
     logging.basicConfig(
         level=getattr(logging, args.log_level),
-        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
     # Set data directory if provided
     if args.data_dir:
-        os.environ['HDF5_MCP_DATA_DIR'] = str(args.data_dir)
+        os.environ["HDF5_MCP_DATA_DIR"] = str(args.data_dir)
 
     # No need to call initialize() - lifespan handles it
     # Server initialization now happens in lifespan context manager
@@ -2204,16 +2347,21 @@ def main():
             logger.info("Starting IoWarp HDF5 FastMCP with stdio transport")
             mcp.run(transport="stdio")
         elif args.transport == "sse":
-            logger.info(f"Starting IoWarp HDF5 FastMCP with SSE transport on {args.host}:{args.port}")
+            logger.info(
+                f"Starting IoWarp HDF5 FastMCP with SSE transport on {args.host}:{args.port}"
+            )
             mcp.run(transport="sse", host=args.host, port=args.port)
         elif args.transport == "http":
-            logger.info(f"Starting IoWarp HDF5 FastMCP with HTTP transport on {args.host}:{args.port}")
+            logger.info(
+                f"Starting IoWarp HDF5 FastMCP with HTTP transport on {args.host}:{args.port}"
+            )
             mcp.run(transport="http", host=args.host, port=args.port)
     except KeyboardInterrupt:
         logger.info("Server stopped by user")
     except Exception as e:
         logger.error(f"Server failed: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

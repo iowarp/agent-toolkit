@@ -65,16 +65,12 @@ class NDPClient:
                 if attempt < self.max_retries - 1:
                     await asyncio.sleep(self.retry_delay * (2**attempt))
                     continue
-                raise Exception(
-                    f"Request timed out after {self.max_retries} attempts"
-                ) from None
+                raise Exception(f"Request timed out after {self.max_retries} attempts") from None
             except httpx.HTTPStatusError as e:
                 if e.response.status_code >= 500 and attempt < self.max_retries - 1:
                     await asyncio.sleep(self.retry_delay * (2**attempt))
                     continue
-                raise Exception(
-                    f"HTTP {e.response.status_code}: {e.response.text}"
-                ) from e
+                raise Exception(f"HTTP {e.response.status_code}: {e.response.text}") from e
             except Exception as e:
                 if attempt < self.max_retries - 1:
                     await asyncio.sleep(self.retry_delay * (2**attempt))
@@ -168,7 +164,12 @@ ndp_client = NDPClient()
 
 @mcp.tool(
     name="list_organizations",
-    description="List organizations available in the National Data Platform. This tool should always be called before searching to verify organization names are correctly formatted. Supports filtering by organization name and selecting different servers (local, global, pre_ckan).",
+    description=(  # noqa: E501
+        "List organizations available in the National Data Platform. This tool should "
+        "always be called before searching to verify organization names are correctly "
+        "formatted. Supports filtering by organization name and selecting different "
+        "servers (local, global, pre_ckan)."
+    ),
 )
 async def list_organizations(
     name_filter: str | None = None, server: str = "global"
@@ -182,7 +183,8 @@ async def list_organizations(
 
     Args:
         name_filter (str, optional): Filter organizations by name substring match
-        server (str, optional): Server to query - 'local', 'global', or 'pre_ckan' (default: 'global')
+        server (str, optional): Server to query - 'local', 'global', or 'pre_ckan'
+            (default: 'global')
 
     Returns:
         dict: Contains list of organization names and metadata about the request
@@ -207,7 +209,13 @@ async def list_organizations(
 
 @mcp.tool(
     name="search_datasets",
-    description="Search for datasets in the National Data Platform using simple or advanced search criteria. Supports both term-based searches and field-specific filtering. Use this tool to discover datasets by keywords, organization, format, or other metadata. Results are automatically limited to 20 by default to prevent context overflow - use the limit parameter to adjust this.",
+    description=(
+        "Search for datasets in the National Data Platform using simple or advanced search "
+        "criteria. Supports both term-based searches and field-specific filtering. Use this "
+        "tool to discover datasets by keywords, organization, format, or other metadata. "
+        "Results are automatically limited to 20 by default to prevent context overflow - use "
+        "the limit parameter to adjust this."
+    ),
 )
 async def search_datasets(
     search_terms: list[str] | None = None,
@@ -242,7 +250,8 @@ async def search_datasets(
 
     Args:
         search_terms (List[str], optional): List of terms for simple search across all fields
-        search_keys (List[str], optional): Corresponding keys for each search term (use null for global search)
+        search_keys (List[str], optional): Corresponding keys for each search term
+            (use null for global search)
         dataset_name (str, optional): Exact or partial dataset name to match
         dataset_title (str, optional): Dataset title to search for
         owner_org (str, optional): Organization name that owns the dataset
@@ -255,7 +264,8 @@ async def search_datasets(
         filter_list (List[str], optional): Field filters in format 'key:value'
         timestamp (str, optional): Filter by timestamp field
         server (str, optional): Server to search - 'local' or 'global' (default: 'global')
-        limit (int or str, optional): Maximum number of results to return (default: 20 to prevent context overflow)
+        limit (int or str, optional): Maximum number of results to return
+            (default: 20 to prevent context overflow)
 
     Returns:
         dict: Contains list of matching datasets with detailed metadata
@@ -307,7 +317,9 @@ async def search_datasets(
         return {
             "datasets": dataset_dicts,
             "count": len(dataset_dicts),
-            "total_found": total_found if not was_limited else f"{len(dataset_dicts)} of {total_found}",
+            "total_found": total_found
+            if not was_limited
+            else f"{len(dataset_dicts)} of {total_found}",
             "server": server,
             "search_parameters": {
                 "search_terms": search_terms,
@@ -332,7 +344,11 @@ async def search_datasets(
 
 @mcp.tool(
     name="get_dataset_details",
-    description="Retrieve detailed information about a specific dataset using its ID or name. Returns comprehensive metadata including all resources, descriptions, and additional fields. Use this after finding datasets with search_datasets to get complete information.",
+    description=(
+        "Retrieve detailed information about a specific dataset using its ID or name. Returns "
+        "comprehensive metadata including all resources, descriptions, and additional fields. "
+        "Use this after finding datasets with search_datasets to get complete information."
+    ),
 )
 async def get_dataset_details(
     dataset_identifier: str, identifier_type: str = "id", server: str = "global"
@@ -358,17 +374,13 @@ async def get_dataset_details(
             # Search by dataset ID - this would typically be a more specific API call
             # For now, we'll use the search functionality
             datasets = await ndp_client.search_datasets_advanced(server=server)
-            matching_dataset = next(
-                (d for d in datasets if d.id == dataset_identifier), None
-            )
+            matching_dataset = next((d for d in datasets if d.id == dataset_identifier), None)
         else:
             # Search by dataset name
             datasets = await ndp_client.search_datasets_advanced(
                 dataset_name=dataset_identifier, server=server
             )
-            matching_dataset = next(
-                (d for d in datasets if d.name == dataset_identifier), None
-            )
+            matching_dataset = next((d for d in datasets if d.name == dataset_identifier), None)
 
         if not matching_dataset:
             return {
@@ -376,7 +388,10 @@ async def get_dataset_details(
                     {
                         "text": json.dumps(
                             {
-                                "error": f"Dataset not found with {identifier_type}: {dataset_identifier}"
+                                "error": (
+                                    f"Dataset not found with {identifier_type}: "
+                                    f"{dataset_identifier}"
+                                )
                             }
                         )
                     }
