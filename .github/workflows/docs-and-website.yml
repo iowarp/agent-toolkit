@@ -7,12 +7,14 @@ on:
       - 'agent-toolkit-website/**'
       - 'agent-toolkit-mcp-servers/**'
       - 'scripts/generate_docs.py'
+      - '.github/workflows/docs-and-website.yml'
   pull_request:
     branches: [main, dev]
     paths:
       - 'agent-toolkit-website/**'
       - 'agent-toolkit-mcp-servers/**'
       - 'scripts/generate_docs.py'
+      - '.github/workflows/docs-and-website.yml'
 
 permissions:
   contents: write
