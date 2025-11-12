@@ -79,7 +79,10 @@ test_data/
 .cache_db.json
 .history_db.json
 
-# Temporary test scripts (don't commit)
+# Temporary test scripts (don't commit) - but allow tests/ directory
 test_*.py
 *_test.py
 *.sh
+# Allow test files in tests/ directory
+!tests/test_*.py
+!tests/*_test.py
