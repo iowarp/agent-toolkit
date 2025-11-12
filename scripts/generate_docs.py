@@ -565,10 +565,8 @@ final_result = finalize_output(processed)
                 with open(output_file, 'r', encoding='utf-8') as f:
                     content = f.read()
                     # Extract existing mcpData object (simple extraction)
-                    import re
                     match = re.search(r'export const mcpData = ({.*?});', content, re.DOTALL)
                     if match:
-                        import json
                         # This is a simplified extraction - in production use proper JS parser
                         try:
                             json_str = match.group(1)
