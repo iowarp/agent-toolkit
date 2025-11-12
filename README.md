@@ -14,11 +14,11 @@
 
 **Agent Toolkit** - Part of the IoWarp platform's tooling layer for AI agents. A comprehensive collection of tools, skills, plugins, and extensions. Currently featuring 15+ Model Context Protocol (MCP) servers for scientific computing, with plans to expand to additional agent capabilities. Enables AI agents to interact with HPC resources, scientific data formats, and research datasets.
 
-**Website**: [https://iowarp.github.io/agent-toolkit/](https://iowarp.github.io/agent-toolkit/)
-**IOWarp**: [https://iowarp.ai](https://iowarp.ai)
-**Chat**: [Zulip Community](https://iowarp.zulipchat.com/#narrow/channel/543872-Agent-Toolkit)
-**Join Us**: [Invitation Link](https://iowarp.zulipchat.com/join/e4wh24du356e4y2iw6x6jeay/)
-**Developed by**: <img src="https://grc.iit.edu/img/logo.png" alt="GRC Logo" width="18" height="18"> **[Gnosis Research Center](https://grc.iit.edu/)**
+[**Website**](https://iowarp.github.io/agent-toolkit/) | [**IOWarp**](https://iowarp.ai)
+
+Chat with us on [**Zulip**](https://iowarp.zulipchat.com/#narrow/channel/543872-Agent-Toolkit) or [**join us**](https://iowarp.zulipchat.com/join/e4wh24du356e4y2iw6x6jeay/)
+
+Developed by <img src="https://grc.iit.edu/img/logo.png" alt="GRC Logo" width="18" height="18"> [**Gnosis Research Center**](https://grc.iit.edu/)
 
 ---
 
