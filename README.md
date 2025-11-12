@@ -5,7 +5,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
 [![FastMCP](https://img.shields.io/badge/FastMCP-2.13-purple)](https://gofastmcp.com)
 [![CI](https://github.com/iowarp/agent-toolkit/actions/workflows/quality_control.yml/badge.svg)](https://github.com/iowarp/agent-toolkit/actions/workflows/quality_control.yml)
-[![Coverage](https://codecov.io/gh/iowarp/agent-toolkit/branch/main/graph/badge.svg?token=YOUR_TOKEN_HERE)](https://codecov.io/gh/iowarp/agent-toolkit)
+[![Coverage](https://codecov.io/gh/iowarp/agent-toolkit/branch/main/graph/badge.svg)](https://codecov.io/gh/iowarp/agent-toolkit)
 
 [![Tests](https://img.shields.io/badge/Tests-15%20MCP%20Packages-blue)](https://github.com/iowarp/agent-toolkit/actions/workflows/test-mcps.yml)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
