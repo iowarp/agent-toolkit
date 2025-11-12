@@ -79,7 +79,7 @@ jobs:
 
     - name: Install Node.js dependencies
       working-directory: ./agent-toolkit-website
-      run: npm ci
+      run: npm install
 
     - name: Build Docusaurus website
       working-directory: ./agent-toolkit-website
