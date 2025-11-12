@@ -141,7 +141,7 @@ def reset_global_state():
     if server.current_file is not None:
         try:
             server.current_file.close()
-        except:
+        except Exception:
             pass
         server.current_file = None
 

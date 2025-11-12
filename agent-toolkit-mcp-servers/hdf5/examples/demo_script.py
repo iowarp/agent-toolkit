@@ -9,7 +9,6 @@ Run: uv run python examples/demo_script.py
 """
 
 import h5py
-import numpy as np
 from pathlib import Path
 
 
@@ -53,7 +52,7 @@ def demo():
         # 4. Partial read (via read_partial_dataset tool)
         print("4. Efficient Data Reading (MCP: read_partial_dataset)")
         subset = temp[0:5, 0:5]
-        print(f"   5x5 subset from (100,50) dataset:")
+        print("   5x5 subset from (100,50) dataset:")
         print(f"   Mean: {subset.mean():.2f} K")
         print(f"   Std: {subset.std():.2f} K")
         print()
@@ -62,7 +61,7 @@ def demo():
         print("5. Performance Inspection (MCP: get_chunks)")
         print(f"   Chunking: {temp.chunks}")
         print(f"   Compression: {temp.compression}")
-        print(f"   → Enables efficient partial reads & streaming")
+        print("   → Enables efficient partial reads & streaming")
         print()
 
         # 6. Multiple datasets (via batch_read tool)
@@ -70,7 +69,7 @@ def demo():
         pressure = f['simulation/pressure']
         print(f"   Temperature mean: {temp[:].mean():.2f} K")
         print(f"   Pressure mean: {pressure[:].mean():.2f} Pa")
-        print(f"   → Parallel batch reading available")
+        print("   → Parallel batch reading available")
         print()
 
         # 7. Analysis results (via get_by_path, read_full_dataset)

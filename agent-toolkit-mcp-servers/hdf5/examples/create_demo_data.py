@@ -66,8 +66,8 @@ def create_demo_data():
     print(f"✓ Created demo file: {output_file}")
     print(f"  - Temperature: {temp_data.shape} float64")
     print(f"  - Pressure: {pressure_data.shape} float64")
-    print(f"  - Metadata: timestamps, lat/lon")
-    print(f"  - Analysis: mean, std")
+    print("  - Metadata: timestamps, lat/lon")
+    print("  - Analysis: mean, std")
 
     return output_file
 

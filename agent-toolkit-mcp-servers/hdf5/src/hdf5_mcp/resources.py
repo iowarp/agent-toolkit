@@ -47,9 +47,8 @@ HDF5 FastMCP Resource Management
 
 import logging
 import json
-import os
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union, Set
+from typing import Any, Dict, List, Optional
 from datetime import datetime
 from collections import OrderedDict
 from threading import Lock
@@ -504,7 +503,6 @@ class ResourceManager:
         """
         try:
             # Check cache first
-            cache_key = f"{file_path}:{dataset_path}"
             if start is None and count is None:
                 cached_data = self.get_cached_dataset(file_path, dataset_path)
                 if cached_data is not None:

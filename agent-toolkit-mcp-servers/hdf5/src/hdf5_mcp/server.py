@@ -50,13 +50,12 @@ HDF5 FastMCP Server - Scientific Data Access for AI Agents
 # requires-python = ">=3.10"
 # ///
 
-import asyncio
 import logging
 import os
 import time
 import json
 from pathlib import Path
-from typing import Any, Optional, List
+from typing import Optional, List
 from functools import wraps
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from contextlib import asynccontextmanager
@@ -70,7 +69,6 @@ from fastmcp.prompts.prompt import Message
 
 from .config import get_config
 from .resources import ResourceManager, LazyHDF5Proxy, discover_hdf5_files_in_roots
-from .utils import HDF5Manager
 
 # =========================================================================
 # Server Setup
@@ -821,7 +819,7 @@ async def hdf5_parallel_scan(directory: str, pattern: str = "*.h5", ctx: Context
     total_datasets = sum(r.get("dataset_count", 0) for r in successful)
     total_size_mb = sum(r.get("total_size_mb", 0) for r in successful)
 
-    summary = f"Parallel scan complete:\n"
+    summary = "Parallel scan complete:\n"
     summary += f"Files processed: {len(scan_results)}\n"
     summary += f"Successful: {len(successful)}\n"
     summary += f"Total datasets: {total_datasets}\n"
@@ -867,7 +865,7 @@ async def hdf5_batch_read(paths: str, slice_spec: Optional[str] = None, ctx: Con
     # Parse paths
     try:
         path_list = json.loads(paths)
-    except:
+    except Exception:
         path_list = [p.strip() for p in paths.split(',') if p.strip()]
 
     if ctx:
@@ -879,7 +877,7 @@ async def hdf5_batch_read(paths: str, slice_spec: Optional[str] = None, ctx: Con
     if slice_spec:
         try:
             slice_obj = eval(f"np.s_[{slice_spec}]")
-        except:
+        except Exception:
             return f"Error: Invalid slice specification: {slice_spec}"
 
     # Parallel batch reading
@@ -994,11 +992,11 @@ async def hdf5_stream_data(path: str, chunk_size: int = 1024, max_chunks: int = 
     # Generate report
     streaming_rate = total_processed / (1024 * 1024)
     summary = f"Stream processing complete for dataset: {path}\n\n"
-    summary += f"Dataset info:\n"
+    summary += "Dataset info:\n"
     summary += f"  Total size: {dataset.nbytes / (1024*1024):.2f} MB\n"
     summary += f"  Shape: {dataset.shape}\n"
     summary += f"  Dtype: {dataset.dtype}\n\n"
-    summary += f"Streaming stats:\n"
+    summary += "Streaming stats:\n"
     summary += f"  Chunks processed: {len(chunk_summaries)}\n"
     summary += f"  Elements processed: {total_processed:,}\n"
     summary += f"  Processing rate: {streaming_rate:.2f} MB\n\n"
@@ -1041,7 +1039,7 @@ async def hdf5_aggregate_stats(paths: str, stats: Optional[str] = None, ctx: Con
     # Parse paths
     try:
         path_list = json.loads(paths)
-    except:
+    except Exception:
         path_list = [p.strip() for p in paths.split(',') if p.strip()]
 
     # Parse stats
@@ -1157,7 +1155,7 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
         datasets = [k for k in items if isinstance(obj[k], h5py.Dataset)]
 
         analysis = f"Structure Analysis for: {path}\n"
-        analysis += f"Type: Group\n"
+        analysis += "Type: Group\n"
         analysis += f"Total items: {len(items)}\n"
         analysis += f"Groups: {len(groups)}\n"
         analysis += f"Datasets: {len(datasets)}\n\n"
@@ -1205,7 +1203,7 @@ async def analyze_dataset_structure(path: str = "/", ctx: Context = None) -> str
 
     elif isinstance(obj, h5py.Dataset):
         analysis = f"Structure Analysis for: {path}\n"
-        analysis += f"Type: Dataset\n"
+        analysis += "Type: Dataset\n"
         analysis += f"Shape: {obj.shape}\n"
         analysis += f"Data type: {obj.dtype}\n"
         analysis += f"Size: {obj.nbytes / (1024*1024):.2f} MB\n"

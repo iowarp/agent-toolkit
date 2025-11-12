@@ -46,8 +46,7 @@ HDF5 FastMCP Utility Functions
 
 import logging
 import h5py
-import numpy as np
-from typing import List, Dict, Any, Tuple, Optional, Union, OrderedDict, Callable
+from typing import Dict, Any, Tuple, Optional, Callable
 from pathlib import Path
 import time
 import os
@@ -56,9 +55,7 @@ from functools import wraps
 from threading import Lock, RLock
 import json
 from collections import OrderedDict
-import weakref
 import threading
-import logging
 
 logger = logging.getLogger(__name__)
 
