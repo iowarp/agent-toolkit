@@ -24,7 +24,8 @@ keywords = [
 dependencies = [
     "fastmcp>=2.13.0",
     "numpy",
-    "adios2"
+    "adios2",
+    "h11>=0.16.0"
 ]
 
 [project.urls]
