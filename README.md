@@ -3,14 +3,15 @@
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![PyPI version](https://img.shields.io/pypi/v/agent-toolkit.svg)](https://pypi.org/project/agent-toolkit/)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
-[![FastMCP](https://img.shields.io/badge/FastMCP-2.13-purple)](https://gofastmcp.com)
+[![FastMCP](https://img.shields.io/badge/FastMCP-2.13%2B-purple)](https://github.com/jlowin/fastmcp)
 [![CI](https://github.com/iowarp/agent-toolkit/actions/workflows/quality_control.yml/badge.svg)](https://github.com/iowarp/agent-toolkit/actions/workflows/quality_control.yml)
 [![Coverage](https://codecov.io/gh/iowarp/agent-toolkit/branch/main/graph/badge.svg)](https://codecov.io/gh/iowarp/agent-toolkit)
 
-[![Tests](https://img.shields.io/badge/Tests-15%20MCP%20Packages-blue)](https://github.com/iowarp/agent-toolkit/actions/workflows/test-mcps.yml)
+[![MCP Servers](https://img.shields.io/badge/MCP%20Servers-15-green)](https://github.com/iowarp/agent-toolkit/tree/main/agent-toolkit-mcp-servers)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
-[![MyPy](https://img.shields.io/badge/mypy-checked-blue)](http://mypy-lang.org/)
-[![uv](https://img.shields.io/badge/uv-managed-orange)](https://github.com/astral-sh/uv)
+[![Type Checked](https://img.shields.io/badge/mypy-type%20checked-blue)](http://mypy-lang.org/)
+[![Package Manager](https://img.shields.io/badge/uv-package%20manager-orange)](https://github.com/astral-sh/uv)
+[![Security Audit](https://img.shields.io/badge/pip--audit-security%20scanned-green)](https://github.com/pypa/pip-audit)
 
 **Agent Toolkit** - Part of the IoWarp platform's tooling layer for AI agents. A comprehensive collection of tools, skills, plugins, and extensions. Currently featuring 15+ Model Context Protocol (MCP) servers for scientific computing, with plans to expand to additional agent capabilities. Enables AI agents to interact with HPC resources, scientific data formats, and research datasets.
 
