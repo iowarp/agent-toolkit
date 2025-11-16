@@ -47,6 +47,9 @@ agent-toolkit = "agent_toolkit:cli"
 sources = ["src"]
 
 # Include all server directories in the wheel for uvx execution
+[tool.hatch.build.targets.wheel]
+packages = ["src/agent_toolkit"]
+
 [tool.hatch.build.targets.wheel.shared-data]
 "agent-toolkit-mcp-servers" = "agent-toolkit-mcp-servers"
 "prompts" = "prompts"
